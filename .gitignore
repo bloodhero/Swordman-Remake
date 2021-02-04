@@ -1,0 +1,13 @@
+# Binaries
+**/build/
+
+# log files
+*.log
+
+# Visual Studio files and folder
+.vs/
+**/out/
+**.sln
+**.vcxproj
+**.vcxproj.filters
+**.vcxproj.user
