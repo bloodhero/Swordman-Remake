@@ -1,10 +1,11 @@
 #pragma once
 
 #include <string>
-
+#include <vector>
 #include "Core/Utils.h"
 
 namespace meow {
+	class LayerStack;
 	class Scene
 	{
 	public:
@@ -22,8 +23,23 @@ namespace meow {
 		void onDraw();
 		void onUpdate(float time);
 
+		LayerStack* getLayerStack();
 	private:
-		struct Impl;
-		Ref<Impl> p_Impl;
+		std::string m_Name;
+		LayerStack* m_LayerStack;
+	};
+
+	class SceneStack
+	{
+	public:
+		SceneStack() = default;
+		~SceneStack();
+		void runWithScene(Scene* scene);
+		void replaceScene(Scene* scene);
+		void pushScene(Scene* scene);
+		void popScene();
+		Scene* getCurrentScene();
+	private:
+		std::vector<Scene*> m_Scenes;
 	};
 }
