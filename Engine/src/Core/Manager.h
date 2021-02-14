@@ -18,7 +18,8 @@ namespace meow {
 	{
 	public:
 		// CREARTORS
-		static Manager* getManager() { return s_Instance; }
+		~Manager() = default;
+		static Manager* getManager();
 
 		// ACCESSORS
 		Audio* getAudio();
@@ -36,6 +37,8 @@ namespace meow {
 		void setNuklear(Nuklear* n);
 
 	private:
+		Manager();
+
 		static Manager* s_Instance;
 		struct Impl;
 		std::unique_ptr<Impl> m_Pimpl;

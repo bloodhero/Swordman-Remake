@@ -1,6 +1,6 @@
-#include "Core/Log.h"
-
+#include "pch.h"
 #include <cstdarg>
+#include "Core/Log.h"
 #include <spdlog/spdlog.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/sinks/basic_file_sink.h>

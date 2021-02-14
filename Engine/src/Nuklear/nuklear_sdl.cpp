@@ -1,3 +1,4 @@
+#include "pch.h"
 #define NK_INCLUDE_FIXED_TYPES
 #define NK_INCLUDE_STANDARD_IO
 #define NK_INCLUDE_STANDARD_VARARGS
@@ -10,4 +11,4 @@
 #define NK_ZERO_COMMAND_MEMORY
 #include <nuklear.h>
 #define NK_SDLSURFACE_IMPLEMENTATION
-#include "Nuklear/nuklear_sdl-inl.h"
+#include "Nuklear/nuklear_sdl.inl"

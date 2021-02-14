@@ -18,7 +18,7 @@ namespace meow {
 		// MANIPULATORS
 		virtual void onPause() = 0;
 		virtual void onResume() = 0;
-		virtual void onNuklearRender() = 0;
+		virtual void onNuklear() = 0;
 
 		void onDraw();
 		void onUpdate(float time);

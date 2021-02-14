@@ -121,8 +121,8 @@ static void
 nk_sdlsurface_ctx_setpixel(const struct sdlsurface_context *sdlsurface,
     const short x0, const short y0, const struct nk_color col)
 {
-    unsigned int c = nk_sdlsurface_color2int(col, sdlsurface->fb->format->format);
-    unsigned char *pixels = sdlsurface->fb->pixels;
+    unsigned int c = nk_sdlsurface_color2int(col, static_cast<SDL_PixelFormatEnum>(sdlsurface->fb->format->format));
+    unsigned char *pixels = static_cast<unsigned char*>(sdlsurface->fb->pixels);
     unsigned int *ptr;
 
     pixels += y0 * sdlsurface->fb->pitch;
@@ -142,7 +142,7 @@ nk_sdlsurface_line_horizontal(const struct sdlsurface_context *sdlsurface,
      * The caller has to make sure it does no exceed bounds. */
     unsigned int i, n;
     unsigned int c[16];
-    unsigned char *pixels = sdlsurface->fb->pixels;
+    unsigned char *pixels = static_cast<unsigned char*>(sdlsurface->fb->pixels);
     unsigned int *ptr;
 
     pixels += y * sdlsurface->fb->pitch;
@@ -150,7 +150,7 @@ nk_sdlsurface_line_horizontal(const struct sdlsurface_context *sdlsurface,
 
     n = x1 - x0;
     for (i = 0; i < sizeof(c) / sizeof(c[0]); i++)
-        c[i] = nk_sdlsurface_color2int(col, sdlsurface->fb->format->format);
+        c[i] = nk_sdlsurface_color2int(col, static_cast<SDL_PixelFormatEnum>(sdlsurface->fb->format->format));
 
     while (n > 16) {
         memcpy((void *)ptr, c, sizeof(c));
@@ -163,15 +163,16 @@ static void
 nk_sdlsurface_img_setpixel(const struct SDL_Surface *img,
     const int x0, const int y0, const struct nk_color col)
 {
-    unsigned int c = nk_sdlsurface_color2int(col, img->format->format);
+    unsigned int c = nk_sdlsurface_color2int(col, static_cast<SDL_PixelFormatEnum>(img->format->format));
     unsigned char *ptr;
     unsigned int *pixel;
     NK_ASSERT(img);
     if (y0 < img->h && y0 >= 0 && x0 >= 0 && x0 < img->w) {
-        ptr = img->pixels + (img->pitch * y0);
+        ptr = static_cast<unsigned char*>(img->pixels) + (img->pitch * y0);
     pixel = (unsigned int *)ptr;
 
-        if (img->format == NK_FONT_ATLAS_ALPHA8) {
+
+        if (static_cast<SDL_PixelFormatEnum>(img->format->format) == NK_FONT_ATLAS_ALPHA8) {
             ptr[x0] = col.a;
         } else {
         pixel[x0] = c;
@@ -187,14 +188,14 @@ nk_sdlsurface_img_getpixel(const struct SDL_Surface *img, const int x0, const in
     unsigned int pixel;
     NK_ASSERT(img);
     if (y0 < img->h && y0 >= 0 && x0 >= 0 && x0 < img->w) {
-        ptr = img->pixels + (img->pitch * y0);
+        ptr = static_cast<unsigned char*>(img->pixels) + (img->pitch * y0);
 
-        if (img->format == NK_FONT_ATLAS_ALPHA8) {
+        if (static_cast<SDL_PixelFormatEnum>(img->format->format) == NK_FONT_ATLAS_ALPHA8) {
             col.a = ptr[x0];
             col.b = col.g = col.r = 0xff;
         } else {
         pixel = ((unsigned int *)ptr)[x0];
-        col = nk_sdlsurface_int2color(pixel, img->format->format);
+        col = nk_sdlsurface_int2color(pixel, static_cast<SDL_PixelFormatEnum>(img->format->format));
         }
     } return col;
 }
@@ -577,7 +578,7 @@ nk_sdlsurface_draw_rect_multi_color(const struct sdlsurface_context *sdlsurface,
     struct nk_color *edge_r;
     struct nk_color pixel;
 
-    edge_buf = malloc(((2*w) + (2*h)) * sizeof(struct nk_color));
+    edge_buf = static_cast<nk_color*>(malloc(((2*w) + (2*h)) * sizeof(struct nk_color)));
     if (edge_buf == NULL)
     return;
 
@@ -810,7 +811,7 @@ nk_sdlsurface_init(SDL_Surface *fb, float fontSize)
     int texh, texw;
     struct sdlsurface_context *sdlsurface;
 
-    sdlsurface = malloc(sizeof(struct sdlsurface_context));
+    sdlsurface = static_cast<sdlsurface_context*>(malloc(sizeof(struct sdlsurface_context)));
     if (!sdlsurface)
         return NULL;
 

@@ -1,7 +1,7 @@
+#include "pch.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 #include <SDL.h>
-#include <memory>
 
 #include "Core/Utils.h"
 #include "Renderer/Texture.h"
@@ -20,24 +20,54 @@ namespace meow {
 
 	static SDL_Surface* loadImage(std::string_view filename)
 	{
-		int x, y, n;
-		unsigned char* data = stbi_load(filename.data(), &x, &y, &n, 0);
+		int req_format = STBI_rgb_alpha;
+		int width, height, orig_format;
+		unsigned char* data = stbi_load(filename.data(), &width, &height, &orig_format, req_format);
+		ASSERT(data, "Loading image failed: {}", filename.data());
 
-		// do sth
+		Uint32 rmask, gmask, bmask, amask;
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+		rmask = 0xff000000;
+		gmask = 0x00ff0000;
+		bmask = 0x0000ff00;
+		amask = 0x000000ff;
+#else // little endian, like x86
+		rmask = 0x000000ff;
+		gmask = 0x0000ff00;
+		bmask = 0x00ff0000;
+		amask = 0xff000000;
+#endif
+		int depth, pitch;
+		depth = 32;
+		pitch = 4 * width;
 
+		SDL_Surface* surf = SDL_CreateRGBSurfaceFrom((void*)data, width, height, depth, pitch,
+			rmask, gmask, bmask, amask);
+
+		ASSERT(surf, "Creating surface failed: {}", SDL_GetError());
 		stbi_image_free(data);
+		return surf;
 	}
 
 	struct SdlImage::Impl
 	{
+		Impl(std::string_view filename);
 		SDL_Texture* sdlTexture = nullptr;
 		Vector2i size;
+		std::string filename;
 		~Impl();
 	};
 
 	SdlImage::Impl::~Impl()
 	{
 		SDL_DestroyTexture(sdlTexture);
+	}
+
+	SdlImage::Impl::Impl(std::string_view filename)
+	{
+		auto surf = loadImage(filename);
+		sdlTexture = SDL_CreateTextureFromSurface(getSdlRenderer(), surf);
+		SDL_FreeSurface(surf);
 	}
 
 
@@ -70,9 +100,8 @@ namespace meow {
 	}
 
 	SdlImage::SdlImage(std::string_view filename) :
-		m_Pimpl(std::make_unique<Impl>())
+		m_Pimpl(std::make_unique<Impl>(filename))
 	{
-
 	}
 
 	void* SdlImage::getRawData()
@@ -102,6 +131,12 @@ namespace meow {
 	meow::Vector2i SdlCanvas::getSize()
 	{
 		return m_Pimpl->size;
+	}
+
+
+	void SdlCanvas::pushLayer(Renderable* ra, Vector2i pos)
+	{
+		m_Pimpl->pushLayer(ra, pos);
 	}
 
 }

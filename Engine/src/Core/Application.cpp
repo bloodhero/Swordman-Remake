@@ -19,10 +19,10 @@ namespace meow {
 		void onClose();
 		void onEvent(SDL_Event& e);
 
-		AppConfig* appConfig;
-		bool isRunning;
-		bool isMinimized;
-		SceneStack* sceneStack;
+		bool isRunning = true;
+		bool isMinimized = false;
+		SceneStack* sceneStack = new SceneStack();
+		~Impl();
 	};
 
 	void Application::Impl::onRun()
@@ -46,15 +46,18 @@ namespace meow {
 			}
 			nuklear->eventEnd();
 
+			if (!isMinimized)
+			{
 			// 更新
-			sceneStack->getCurrentScene()->onUpdate(ts.getMilliseconds());
+				sceneStack->getCurrentScene()->onUpdate(ts.getMilliseconds());
 
-			// 渲染
-			manager->getGfxDevice()->clearScreen();
-			sceneStack->getCurrentScene()->onDraw();
-			sceneStack->getCurrentScene()->onNuklearRender();
-			nuklear->render();
-			manager->getGfxDevice()->updateScreen();
+				// 渲染
+				manager->getGfxDevice()->clearScreen();
+				sceneStack->getCurrentScene()->onDraw();
+				sceneStack->getCurrentScene()->onNuklear();
+				nuklear->render();
+				manager->getGfxDevice()->updateScreen();
+			}
 		}
 		nuklear->end();
 	}
@@ -66,33 +69,48 @@ namespace meow {
 
 	void Application::Impl::onEvent(SDL_Event& event)
 	{
-		if (event.type == SDL_QUIT)
+		switch (event.type)
+		{
+		case SDL_WINDOWEVENT:
+			switch (event.window.event)
+			{
+			case SDL_WINDOWEVENT_MINIMIZED:
+				isMinimized = true;
+				break;
+
+			case SDL_WINDOWEVENT_RESTORED:
+				isMinimized = false;
+				break;
+
+			default:
+
+				break;
+			}
+
+			break;
+
+		case SDL_QUIT:
 			onClose();
+			break;
+
+		default:
+			break;
+		}
+	}
+
+	Application::Impl::~Impl()
+	{
+		delete sceneStack;
 	}
 
 	Application::Application() :
 		m_Pimpl(std::make_unique<Impl>())
 	{
-		// 设置服务
-		auto manager = Manager::getManager();
-		manager->setAudio(new OpenALAudio());
-		manager->setClientLog(new spdlogLog("client.log"));
-		manager->setCoreLog(new spdlogLog("Engine.log"));
-		manager->setWindow(new SdlWindow());
-		manager->setGfxDevice(new SdlGfxDevice());
-		manager->setNuklear(new SdlsurfaceNuklear());
 
-		// 加载配置 app-config.json
+		auto manager = Manager::getManager();
 		AppConfig app_cfg;
 
-		manager->getWindow()->setWindowTitle(app_cfg.windowTitle);
-		manager->getWindow()->setWindowIcon(app_cfg.windowIcon);
-		manager->getGfxDevice()->setLogicalSize(app_cfg.size);
-		manager->getWindow()->setFullScreen(app_cfg.isFullScreen);
-		manager->getWindow()->setResizable(app_cfg.isResizable);
-
-
-		// 设置日志服务
+		// 优先设置日志服务
 		if (app_cfg.isEnableLog)
 		{
 			manager->setClientLog(new spdlogLog("client.log"));
@@ -104,13 +122,24 @@ namespace meow {
 			manager->setCoreLog(new NullLog());
 		}
 
+		manager->setAudio(new NullAudio());
+		manager->setWindow(new SdlWindow());
+		manager->setGfxDevice(new SdlGfxDevice());
+		manager->setNuklear(new SdlsurfaceNuklear());
+
+		manager->getWindow()->setWindowTitle(app_cfg.windowTitle);
+		manager->getWindow()->setWindowIcon(app_cfg.windowIcon);
+		manager->getGfxDevice()->setLogicalSize(app_cfg.size);
+		manager->getWindow()->setFullScreen(app_cfg.isFullScreen);
+		manager->getWindow()->setResizable(app_cfg.isResizable);
+
 	}
 
 
-	Application::Application():
-		m_Pimpl(std::make_unique<Impl>())
+	Application* Application::getApplication()
 	{
-
+		static Application instance;
+		return &instance;
 	}
 
 	void Application::onRun()
@@ -141,7 +170,5 @@ namespace meow {
 	{
 		m_Pimpl->sceneStack->popScene();
 	}
-
-	std::shared_ptr<meow::Application> Application::s_Instance;
 
 }

@@ -5,8 +5,8 @@ namespace meow {
 	class StartScene :public Scene
 	{
 	public:
-		StartScene();
-		~StartScene();
+		StartScene() = default;
+		~StartScene() = default;
 		void onPause() override
 		{
 
@@ -19,8 +19,9 @@ namespace meow {
 		}
 
 
-		void onNuklearRender() override
+		void onNuklear() override
 		{
+
 		}
 
 	};

@@ -4,3 +4,4 @@
 #include "Video/Video.h"
 #include "Renderer/Camera.h"
 #include "Renderer/Drawable.h"
+#include "Core/EntryPoint.h"

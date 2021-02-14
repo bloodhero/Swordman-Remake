@@ -62,6 +62,9 @@ namespace meow {
 		void reset() override;
 
 	private:
+		void pushGfxFrame(Renderable* r);
+		void pushSfxFrame(int key_frame, MixChunk* sfx);
+
 		struct Impl;
 		std::unique_ptr<Impl> m_Pimpl;
 	};
@@ -75,6 +78,7 @@ namespace meow {
 		void setAnchorPoint(float x, float y) override;
 
 	private:
+
 		struct Impl;
 		std::unique_ptr<Impl> m_Pimpl;
 	};

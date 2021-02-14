@@ -1,5 +1,5 @@
+#include "pch.h"
 #include <SDL.h>
-#include <memory>
 #include "Core/Window.h"
 #include "Core/Utils.h"
 #include "Renderer/Texture.h"
@@ -30,7 +30,7 @@ namespace meow {
 		isResizable = resize;
 		SDL_SetWindowResizable(windowHandle, resize ? SDL_TRUE : SDL_FALSE);
 
-		LOGGER->trace("Window resizable is {}", resize ? "enabled" : "disabled");
+		LOGGER->trace("{}: Window resizable is {}", __func__, resize ? "enabled" : "disabled");
 	}
 
 	void SdlWindow::Impl::setFullScreen(bool full)
@@ -39,7 +39,7 @@ namespace meow {
 		SDL_SetWindowFullscreen(windowHandle, full ? SDL_WINDOW_FULLSCREEN : 0);
 		if (!full) SDL_SetWindowPosition(windowHandle, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
 
-		LOGGER->trace("Window fullscreen is {}", full ? "enabled" : "disabled");
+		LOGGER->trace("{}: Window fullscreen is {}", __func__, full ? "enabled" : "disabled");
 	}
 
 	void SdlWindow::Impl::setVSync(bool vsync)
@@ -49,22 +49,26 @@ namespace meow {
 
 	void SdlWindow::Impl::setWindowTitle(std::string_view title)
 	{
-		windowTitle = title;
-		SDL_SetWindowTitle(windowHandle, title.data());
+		if (!title.empty())
+		{
+			windowTitle = title;
+			SDL_SetWindowTitle(windowHandle, title.data());
 
-		LOGGER->trace("Window title : {}", title.data());
+			LOGGER->trace("Window title : {}", title.data());
+		}
 	}
 
 	void SdlWindow::Impl::setWindowIcon(std::string_view icon_file)
 	{
+		if (!icon_file.empty())
+		{
+			windowIcon = icon_file;
+			SDL_Surface* surface = SDL_LoadBMP(icon_file.data());
+			SDL_SetWindowIcon(windowHandle, surface);
+			SDL_FreeSurface(surface);
 
-		windowIcon = icon_file;
-		SDL_Surface* surface = SDL_LoadBMP(icon_file.data());
-		SDL_SetWindowIcon(windowHandle, surface);
-		SDL_FreeSurface(surface);
-
-		LOGGER->trace("Window icon file is {}", icon_file.data());
-
+			LOGGER->trace("Window icon file is {}", icon_file.data());
+		}
 	}
 
 	void SdlWindow::Impl::setResolution(Vector2i size)

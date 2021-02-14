@@ -1,3 +1,4 @@
+#include "pch.h"
 #include <SDL.h>
 #include "Core/Window.h"
 #include "Core/Manager.h"

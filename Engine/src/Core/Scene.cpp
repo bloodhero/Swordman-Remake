@@ -1,6 +1,6 @@
+#include "pch.h"
 #include "Core/Scene.h"
 #include "Core/Layer.h"
-#include "Events/Event.h"
 
 namespace meow {
 	SceneStack::~SceneStack()

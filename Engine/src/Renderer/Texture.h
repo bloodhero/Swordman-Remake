@@ -23,7 +23,7 @@ namespace meow {
 	{
 	public:
 		virtual ~Canvas() = default;
-
+		virtual void pushLayer(Renderable* ra, Vector2i pos) = 0;
 	};
 
 	class SdlImage :Image
@@ -44,6 +44,9 @@ namespace meow {
 		SdlCanvas(int width, int height);
 		void* getRawData() override;
 		Vector2i getSize() override;
+
+	private:
+		void pushLayer(Renderable* ra, Vector2i pos) override;
 
 	private:
 		struct Impl;

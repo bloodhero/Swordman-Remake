@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "Video/Video.h"
 
 namespace meow {
@@ -10,7 +11,7 @@ namespace meow {
 
 	bool FfmpegVideo::isEnd()
 	{
-
+		return false;
 	}
 
 
@@ -34,13 +35,13 @@ namespace meow {
 
 	meow::Rect FfmpegVideo::getArea()
 	{
-
+		return { 0, 0, 0, 0 };
 	}
 
 
 	std::string FfmpegVideo::getName()
 	{
-
+		return "";
 	}
 
 }

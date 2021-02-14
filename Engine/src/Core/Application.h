@@ -9,7 +9,7 @@
 
 
 #include <string>
-
+#include "Math/Vector2.h"
 #include "Core/Utils.h"
 
 namespace meow {
@@ -17,13 +17,13 @@ namespace meow {
 
 	struct AppConfig
 	{
-		std::string windowTitle;
-		std::string windowIcon;
-		std::string resourceDir;
-		Vector2i size;
-		bool isFullScreen;
-		bool isResizable;
-		bool isEnableLog;
+		std::string windowTitle = "Swordman";
+		std::string windowIcon = "";
+		std::string resourceDir = "";
+		Vector2i size = {800, 600};
+		bool isFullScreen = false;
+		bool isResizable = true;
+		bool isEnableLog = false;
 	};
 
 	class Application
@@ -31,7 +31,7 @@ namespace meow {
 	public:
 		// CREARTORS
 		~Application() = default;
-		static std::shared_ptr<Application>& getApplication() { return s_Instance; }
+		static Application* getApplication();
 
 		// ACCESSORS
 
@@ -47,7 +47,7 @@ namespace meow {
 
 		struct Impl;
 		std::unique_ptr<Impl> m_Pimpl;
-		static std::shared_ptr<Application> s_Instance;
+		static Application* s_Instance;
 	};
 
 	// To be defined in CLIENT

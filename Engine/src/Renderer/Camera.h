@@ -15,9 +15,9 @@ namespace meow {
 		{}
 		~Camera() = default;
 
-		void setPosition(Vector2f pos) { m_Position = pos; }
-		Vector2f Screen2World(Vector2f pos) { return pos + m_Position - m_Size / 2.0; }
-		Vector2f World2Screen(Vector2f pos) { return pos - m_Position + m_Size / 2.0; }
+		void setPosition(Vector2i pos) { m_Position = pos; }
+		Vector2i Screen2World(Vector2i pos) { return pos + m_Position - m_Size / 2.0; }
+		Vector2i World2Screen(Vector2i pos) { return pos - m_Position + m_Size / 2.0; }
 		Rect getArea()
 		{
 			auto real_position = m_Position - m_Size / 2.0f;
@@ -30,8 +30,8 @@ namespace meow {
 		}
 
 	private:
-		Vector2f m_Position;
-		Vector2f m_Size;
+		Vector2i m_Position;
+		Vector2i m_Size;
 	};
 
 

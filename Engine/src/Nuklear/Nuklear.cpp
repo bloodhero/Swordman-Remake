@@ -1,7 +1,5 @@
-#include "Nuklear/Nuklear.h"
+#include "pch.h"
 #include <SDL.h>
-#include <SDL_mouse.h>
-#include <SDL_keyboard.h>
 #include "Core/Window.h"
 #include "Core/Manager.h"
 #define NK_INCLUDE_FIXED_TYPES
@@ -14,9 +12,48 @@
 #define NK_BUTTON_TRIGGER_ON_RELEASE
 #define NK_ZERO_COMMAND_MEMORY
 #include <nuklear.h>
-#include "Nuklear/nuklear_sdl-inl.h"
+#include "Nuklear/nuklear_sdl.inl"
+#include "Nuklear/Nuklear.h"
 
 namespace meow {
+
+	static SDL_Renderer* getSdlRenderer()
+	{
+		static SDL_Renderer* sdl_renderer = nullptr;
+		if (sdl_renderer) return sdl_renderer;
+		SdlWindow* sdl_window = static_cast<SdlWindow*>(Manager::getManager()->getWindow());
+		sdl_renderer = static_cast<SDL_Renderer*>(sdl_window->getRawRenderer());
+		return sdl_renderer;
+	}
+
+	static nk_keys translate_sdl_key(struct SDL_Keysym const* k)
+	{
+		/*keyboard handling left as an exercise for the reader */
+
+		return NK_KEY_NONE;
+	}
+
+
+	static nk_buttons sdl_button_to_nk(int button)
+	{
+		switch (button)
+		{
+		case SDL_BUTTON_LEFT:
+			return NK_BUTTON_LEFT;
+			break;
+		case SDL_BUTTON_MIDDLE:
+			return NK_BUTTON_MIDDLE;
+			break;
+		case SDL_BUTTON_RIGHT:
+			return NK_BUTTON_RIGHT;
+			break;
+		default:
+			//ft
+			break;
+		}
+	}
+
+
 	struct SdlsurfaceNuklear::Impl
 	{
 		SDL_Surface* surface;
@@ -100,40 +137,11 @@ namespace meow {
 		return context;
 	}
 
-	static SDL_Renderer* getSdlRenderer()
+
+	SdlsurfaceNuklear::SdlsurfaceNuklear() :
+		m_Pimpl(std::make_unique<Impl>())
 	{
-		static SDL_Renderer* sdl_renderer = nullptr;
-		if (sdl_renderer) return sdl_renderer;
-		SdlWindow* sdl_window = static_cast<SdlWindow*>(Manager::getManager()->getWindow());
-		sdl_renderer = static_cast<SDL_Renderer*>(sdl_window->getRawRenderer());
-		return sdl_renderer;
-	}
 
-	static nk_keys translate_sdl_key(struct SDL_Keysym const* k)
-	{
-		/*keyboard handling left as an exercise for the reader */
-
-		return NK_KEY_NONE;
-	}
-
-
-	static nk_buttons sdl_button_to_nk(int button)
-	{
-		switch (button)
-		{
-		case SDL_BUTTON_LEFT:
-			return NK_BUTTON_LEFT;
-			break;
-		case SDL_BUTTON_MIDDLE:
-			return NK_BUTTON_MIDDLE;
-			break;
-		case SDL_BUTTON_RIGHT:
-			return NK_BUTTON_RIGHT;
-			break;
-		default:
-			//ft
-
-		}
 	}
 
 	void SdlsurfaceNuklear::begin()

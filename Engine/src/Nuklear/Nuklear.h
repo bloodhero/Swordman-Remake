@@ -18,6 +18,8 @@ namespace meow {
 	class SdlsurfaceNuklear :public Nuklear
 	{
 	public:
+		SdlsurfaceNuklear();
+		~SdlsurfaceNuklear() = default;
 		void begin() override;
 		void end() override;
 		void eventBegin() override;

@@ -1,4 +1,4 @@
-#include <string>
+#include "pch.h"
 #include <SDL.h>
 #include <nlohmann/json.hpp>
 
@@ -206,7 +206,7 @@ namespace meow {
 
 	Rect SdlAnimation::Impl::getArea()
 	{
-
+		return { 0, 0, 0, 0 };
 	}
 
 	void SdlAnimation::Impl::pushGfxFrame(Renderable* r)
@@ -241,6 +241,18 @@ namespace meow {
 	void SdlAnimation::reset()
 	{
 		m_Pimpl->reset();
+	}
+
+
+	void SdlAnimation::pushGfxFrame(Renderable* r)
+	{
+		m_Pimpl->pushGfxFrame(r);
+	}
+
+
+	void SdlAnimation::pushSfxFrame(int key_frame, MixChunk* sfx)
+	{
+		m_Pimpl->pushSfxFrame(key_frame, sfx);
 	}
 
 	bool SdlAnimation::isEnd()
@@ -281,7 +293,7 @@ namespace meow {
 
 	meow::Rect SdlPicture::getArea()
 	{
-
+		return { 0, 0, 0, 0 };
 	}
 
 
