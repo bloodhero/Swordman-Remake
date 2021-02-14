@@ -1,28 +1,52 @@
 #pragma once
 
 #include <string>
+#include <memory>
 #include "Math/Vector2.h"
+#include "Renderer/Renderable.h"
 
 namespace meow {
 	class Texture
 	{
 	public:
-		void* getRawData();
+		virtual void* getRawData() = 0;
+		virtual Vector2i getSize() = 0;
 	};
 
 	class Image :public Texture
 	{
 	public:
-		Image(std::string_view filename);
-		void setColorToAlpha(int r, int g, int b);
-
+		virtual ~Image() = default;
 	};
 
 	class Canvas :public Texture
 	{
 	public:
-		Canvas(int width, int height);
-		void pushLayer(Texture* tex, Vector2i pos);
+		virtual ~Canvas() = default;
 
+	};
+
+	class SdlImage :Image
+	{
+	public:
+		SdlImage(std::string_view filename);
+		void* getRawData() override;
+		Vector2i getSize() override;
+
+	private:
+		struct Impl;
+		std::unique_ptr<Impl> m_Pimpl;
+	};
+
+	class SdlCanvas :Canvas
+	{
+	public:
+		SdlCanvas(int width, int height);
+		void* getRawData() override;
+		Vector2i getSize() override;
+
+	private:
+		struct Impl;
+		std::unique_ptr<Impl> m_Pimpl;
 	};
 }

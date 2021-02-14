@@ -15,15 +15,15 @@
 namespace meow {
 	class Scene;
 
-	struct AppInitConfig
+	struct AppConfig
 	{
 		std::string windowTitle;
 		std::string windowIcon;
 		std::string resourceDir;
-		int width;
-		int height;
+		Vector2i size;
 		bool isFullScreen;
 		bool isResizable;
+		bool isEnableLog;
 	};
 
 	class Application
@@ -31,36 +31,25 @@ namespace meow {
 	public:
 		// CREARTORS
 		~Application() = default;
-		static Ref<Application>& getApplication() { return s_Instance; }
+		static std::shared_ptr<Application>& getApplication() { return s_Instance; }
 
 		// ACCESSORS
 
 		// MANIPULATORS
 		void onRun(); // 启动游戏主循环
-		void onConfig(Bootstrap* booter); // 配置各个子系统
+		void runWithScene(Scene* scene);
+		void replaceScene(Scene* scene);
+		void pushScene(Scene* scene);
+		void popScene();
 
 	private:
-		Application() :p_Impl(CreateScope<Impl>()) {};
+		Application();
 
 		struct Impl;
-		Scope<Impl> p_Impl;
-
-		static Ref<Application> s_Instance;
-	};
-
-	class Bootstrap
-	{
-	public:
-		// CREARTORS
-		virtual ~Bootstrap() = default;
-
-		// ACCESSORS
-
-		// MANIPULATORS
-		virtual void configApp(AppInitConfig* config) = 0;
-		virtual Scene* firstScene() = 0;
+		std::unique_ptr<Impl> m_Pimpl;
+		static std::shared_ptr<Application> s_Instance;
 	};
 
 	// To be defined in CLIENT
-	extern meow::Bootstrap* meow::createBootstrap();
+	extern Scene* createStartScene();
 }

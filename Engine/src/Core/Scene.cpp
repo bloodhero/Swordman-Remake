@@ -1,4 +1,6 @@
 #include "Core/Scene.h"
+#include "Core/Layer.h"
+#include "Events/Event.h"
 
 namespace meow {
 	SceneStack::~SceneStack()
@@ -62,6 +64,39 @@ namespace meow {
 	Scene* SceneStack::getCurrentScene()
 	{
 		return m_Scenes.back();
+	}
+
+
+	Scene::Scene() :
+		m_LayerStack(new LayerStack())
+	{
+	}
+
+
+	Scene::~Scene()
+	{
+		delete m_LayerStack;
+	}
+
+	void Scene::onDraw()
+	{
+		for (auto it = m_LayerStack->begin(); it != m_LayerStack->end(); ++it)
+		{
+			(*it)->onDraw();
+		}
+	}
+
+
+	void Scene::onUpdate(float time)
+	{
+		for (Layer* layer : *m_LayerStack)
+			layer->onUpdate(time);
+	}
+
+
+	meow::LayerStack* Scene::getLayerStack()
+	{
+		return m_LayerStack;
 	}
 
 }

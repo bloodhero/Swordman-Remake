@@ -3,55 +3,24 @@
 #include <string>
 #include <memory>
 #include "Math/Vector2.h"
+#include "Renderer/Renderable.h"
+
 
 
 namespace meow {
 	class Texture;
 	class MixChunk;
-	class Renderable;
-
-	struct Rect
-	{
-		int x;
-		int y;
-		int w;
-		int h;
-	};
-
-	struct Color
-	{
-		int r;
-		int g;
-		int b;
-		int a;
-	};
+	class Camera;
 
 
 	class Drawable
 	{
 	public:
-		Drawable(Camera* cam) :m_camera(cam) {}
 		virtual ~Drawable() = default;
 		virtual void onDraw() = 0;
 		virtual void onUpdate(float time) = 0;
-		void setAnchorPoint(float x, float y) { m_AnchorPoint = { x,y }; }
-		void setSize(int width, int height) { m_Size = { width, height }; }
-		void setPosition(Vector2f pos) { m_Position = pos; }
-		Rect getArea()
-		{
-			return {
-				m_Position.x + m_Size.x * m_AnchorPoint.x,
-				m_Position.y + m_Size.y * m_AnchorPoint.y,
-				m_Size.x,
-				m_Size.y
-			};
-		}
-
-	protected:
-		Vector2f m_Position;
-		Vector2f m_AnchorPoint;
-		Vector2f m_Size;
-		Camera* m_camera;
+		virtual void setPosition(Vector2f pos) = 0;
+		virtual Rect getArea() = 0;
 	};
 
 
@@ -60,48 +29,53 @@ namespace meow {
 	public:
 		enum class AnimationType
 		{
-			PLAY_REPEAT,
+			NORMAL,
 			PLAY_ONCE,
 			BACK_FORTH
 		};
 
 		// CREARTORS
-		Animation(std::string_view json_file);
 		~Animation() = default;
-
-		// ACCESSORS
-		bool isLooped();
-		bool isEnd();
-		void onDraw() override;
-
-
-		// MANIPULATORS
-		void onUpdate(float time) override;
-		void setDesc(std::string_view desc);
-		void setName(std::string_view name);
-		void setLoop(bool loop);
-		void setDuration(float time);
-		void setDurationPerFrame(float time);
-		void setType(AnimationType type);
-		void pushGfxFrame(Renderable* gfx);
-		void pushSfxFrame(int key_frame, MixChunk* sfx);
-		void skip();
-
-	private:
-		struct Impl;
-		std::unique_ptr<Impl*> m_Pimpl;
-
+		virtual bool isEnd() = 0;
+		virtual void skip() = 0;
+		virtual void reset() = 0;
 	};
 
 	class Picture :public Drawable
 	{
 	public:
-		Picture(Renderable* r);
-		void onDraw() override;
 		void onUpdate(float time) override {}
+		virtual void setAnchorPoint(float x, float y) = 0;
+
+	};
+
+	class SdlAnimation :public Animation
+	{
+	public:
+		SdlAnimation(std::string_view json_file, Camera* cam);
+		void onDraw() override;
+		void onUpdate(float time) override;
+		void setPosition(Vector2f pos) override;
+		Rect getArea() override;
+		bool isEnd() override;
+		void skip() override;
+		void reset() override;
 
 	private:
 		struct Impl;
-		std::unique_ptr<Impl*> m_Pimpl;
+		std::unique_ptr<Impl> m_Pimpl;
+	};
+
+	class SdlPicture :public Picture
+	{
+	public:
+		void onDraw() override;
+		void setPosition(Vector2f pos) override;
+		Rect getArea() override;
+		void setAnchorPoint(float x, float y) override;
+
+	private:
+		struct Impl;
+		std::unique_ptr<Impl> m_Pimpl;
 	};
 }

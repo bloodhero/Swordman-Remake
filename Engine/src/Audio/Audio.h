@@ -9,24 +9,26 @@ namespace meow {
 	class MixChunk
 	{
 	public:
-		MixChunk(std::string_view filename);
-		MixChunk(void* raw_data, int size);
-		std::string getName();
-		~MixChunk();
+		virtual ~MixChunk() = default;
+		virtual std::string getName() = 0;
+
 	};
+
+	class OpenALMixChunk :public MixChunk
+	{
+	public:
+
+	};
+
 	class Audio
 	{
 	public:
-		static Ref<Audio> getAudio() { return  s_AudioService; }
-		static void setAudio(Ref<Audio> a);
 		virtual ~Audio() = default;
-		virtual void playSFX(MixChunk* chunk);
-		virtual void playMusic(MixChunk* chunk, bool loop);
-		virtual void playMusics(std::vector<MixChunk*> chunks, bool loop);
-		virtual void playStream(std::shared_ptr<MixChunk> chunk);
-		virtual void onUpdate(float time);
-	private:
-		static Ref<Audio> s_AudioService;
+		virtual void playSFX(MixChunk* chunk) = 0;
+		virtual void playMusic(MixChunk* chunk, bool loop) = 0;
+		virtual void playMusics(std::vector<MixChunk*> chunks, bool loop) = 0;
+		virtual void playStream(std::unique_ptr<MixChunk> chunk) = 0;
+		virtual void onUpdate(float time) = 0;
 	};
 
 	class NullAudio :public Audio
@@ -36,7 +38,7 @@ namespace meow {
 		void playMusic(MixChunk* chunk, bool loop) override { std::cout << "playing music: " << chunk->getName() << std::endl; }
 		void playMusics(std::vector<MixChunk*> chunks, bool loop) override { std::cout << "playing number musics: " << chunks.size() << std::endl; }
 		void onUpdate(float time) override {}
-		void playStream(std::shared_ptr<MixChunk> chunk) override { std::cout << "playing stream audio" << std::endl; }
+		void playStream(std::unique_ptr<MixChunk> chunk) override { std::cout << "playing stream audio" << std::endl; }
 
 	};
 
@@ -46,7 +48,7 @@ namespace meow {
 		void playSFX(MixChunk* chunk) override;
 		void playMusic(MixChunk* chunk, bool loop) override;
 		void playMusics(std::vector<MixChunk*> chunks, bool loop) override;
-		void playStream(std::shared_ptr<MixChunk> chunk) override;
+		void playStream(std::unique_ptr<MixChunk> chunk) override;
 		void onUpdate(float time) override;
 
 	private:

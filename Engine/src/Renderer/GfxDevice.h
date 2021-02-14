@@ -9,8 +9,15 @@ namespace meow {
 	class GfxDevice
 	{
 	public:
-		static GfxDevice* getGfxDevice();
-		static void setGfxDevice(GfxDevice* g);
+		enum class ScaleQuality
+		{
+			NEAREST,
+			LINEAR,
+			BEST
+		};
+
+		virtual ~GfxDevice() = default;
+		virtual void setScaleQuality(ScaleQuality qlt) = 0;
 		virtual void setClearColor(Color color) = 0;
 		virtual void setLogicalSize(Vector2i size) = 0;
 
@@ -19,13 +26,19 @@ namespace meow {
 
 		virtual void clearScreen() = 0;
 		virtual void updateScreen() = 0;
-
-	private:
-		static GfxDevice* s_Instance;
 	};
 
 	class SdlGfxDevice :public GfxDevice
 	{
+
+	public:
+		void setClearColor(Color color) override;
+		void setLogicalSize(Vector2i size) override;
+		Color getClearColor() override;
+		Vector2i getLogicalSize() override;
+		void clearScreen() override;
+		void updateScreen() override;
+		void setScaleQuality(ScaleQuality qlt) override;
 
 	};
 }

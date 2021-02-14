@@ -4,8 +4,23 @@
 
 namespace meow {
 	class Texture;
-	class Rect;
-	class Color;
+
+	struct Rect
+	{
+		int x;
+		int y;
+		int w;
+		int h;
+	};
+
+	struct Color
+	{
+		int r;
+		int g;
+		int b;
+		int a;
+	};
+
 
 	struct Renderable
 	{
@@ -17,9 +32,9 @@ namespace meow {
 			MOD
 		};
 		Texture* texture;
-		Rect* slice;
+		Rect slice;
 		float alphaMod;
 		BlendMode blendMode;
-		Color* colorMod;
+		Color colorMod;
 	};
 }

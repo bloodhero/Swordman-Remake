@@ -10,7 +10,7 @@ namespace meow {
 	{
 	public:
 		// CREARTORS
-		Scene(std::string_view name = "Scene");
+		Scene();
 		virtual ~Scene();
 
 		// ACCESSORS
@@ -18,14 +18,13 @@ namespace meow {
 		// MANIPULATORS
 		virtual void onPause() = 0;
 		virtual void onResume() = 0;
+		virtual void onNuklearRender() = 0;
 
-		void onEvent();
 		void onDraw();
 		void onUpdate(float time);
-
 		LayerStack* getLayerStack();
+
 	private:
-		std::string m_Name;
 		LayerStack* m_LayerStack;
 	};
 

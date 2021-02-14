@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <memory>
 
 
 namespace meow {
@@ -8,26 +9,22 @@ namespace meow {
 	class Log
 	{
 	public:
-		Log(std::string_view filename) { m_Filename = filename; }
 		virtual ~Log() = default;
-		virtual void trace(...) = 0;
-		virtual void info(...) = 0;
-		virtual void warn(...) = 0;
-		virtual void error(...) = 0;
-		virtual void critical(...) = 0;
-	protected:
-		std::string m_Filename;
+		virtual void trace(const char* fmt, ...) = 0;
+		virtual void info(const char* fmt, ...) = 0;
+		virtual void warn(const char* fmt, ...) = 0;
+		virtual void error(const char* fmt, ...) = 0;
+		virtual void critical(const char* fmt, ...) = 0;
 	};
 
 	class NullLog :public Log
 	{
 	public:
-		NullLog(std::string_view filename) :Log(filename) {}
-		void trace(...) override {}
-		void info(...) override {}
-		void warn(...) override {}
-		void error(...) override {}
-		void critical(...) override {}
+		void trace(const char* fmt, ...) override {}
+		void info(const char* fmt, ...) override {}
+		void warn(const char* fmt, ...) override {}
+		void error(const char* fmt, ...) override {}
+		void critical(const char* fmt, ...) override {}
 
 	};
 
@@ -35,11 +32,14 @@ namespace meow {
 	{
 	public:
 		spdlogLog(std::string_view filename);
-		void trace(...) override;
-		void info(...) override;
-		void warn(...) override;
-		void error(...) override;
-		void critical(...) override;
+		void trace(const char* fmt, ...) override;
+		void info(const char* fmt, ...) override;
+		void warn(const char* fmt, ...) override;
+		void error(const char* fmt, ...) override;
+		void critical(const char* fmt, ...) override;
 
+	private:
+		struct Impl;
+		std::unique_ptr<Impl> m_Pimpl;
 	};
 }

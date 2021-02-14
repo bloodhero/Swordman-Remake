@@ -19,7 +19,7 @@ project "Engine"
 	-- 宏定义
 	defines
 	{
-
+		"ENGINE"
 	}
 
 	-- 附加包含目录

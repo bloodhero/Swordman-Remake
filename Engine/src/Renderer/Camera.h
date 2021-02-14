@@ -29,7 +29,6 @@ namespace meow {
 			};
 		}
 
-		void moveTo(Vector2f pos, float time);
 	private:
 		Vector2f m_Position;
 		Vector2f m_Size;

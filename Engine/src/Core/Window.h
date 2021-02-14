@@ -14,29 +14,42 @@ namespace meow {
 	public:
 
 		// CREARTORS
-		~Window() = default;
+		virtual ~Window() = default;
 
 		// ACCESSORS
-		bool isResizable();
-		bool isFullScreen();
-		bool isVSync();
-		Vector2i getResolution();
+		virtual bool isResizable() = 0;
+		virtual bool isFullScreen() = 0;
+		virtual bool isVSync() = 0;
+		virtual Vector2i getResolution() = 0;
 
 		// MANIPULATORS
-		void setResizable(bool resize);
-		void setResolution(Vector2i size);
-		void setFullScreen(bool full);
-		void setWindowTitle(std::string_view title);
-		void setWindowIcon(Texture* tex);
-		void setVSync(bool enabled);
-
-	private:
-		struct Impl;
-		std::unique_ptr<Impl> m_Pimpl;
+		virtual void setResizable(bool resize) = 0;
+		virtual void setResolution(Vector2i size) = 0;
+		virtual void setFullScreen(bool full) = 0;
+		virtual void setWindowTitle(std::string_view title) = 0;
+		virtual void setWindowIcon(std::string_view icon_file) = 0;
+		virtual void setVSync(bool enabled) = 0;
 	};
 
 	class SdlWindow :public Window
 	{
 
+	public:
+		SdlWindow();
+		bool isResizable() override;
+		bool isFullScreen() override;
+		bool isVSync() override;
+		Vector2i getResolution() override;
+		void setResizable(bool resize) override;
+		void setResolution(Vector2i size) override;
+		void setFullScreen(bool full) override;
+		void setWindowTitle(std::string_view title) override;
+		void setWindowIcon(std::string_view icon_file) override;
+		void setVSync(bool enabled) override;
+		void* getRawRenderer();
+
+	private:
+		struct Impl;
+		std::unique_ptr<Impl> m_Pimpl;
 	};
 }
