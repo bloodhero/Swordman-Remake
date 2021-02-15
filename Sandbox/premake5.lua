@@ -16,6 +16,7 @@ project "Sandbox"
 	includedirs
 	{
 		"%{wks.location}/Engine/src",
+		"%{IncludeDir.spdlog}",
 		"%{IncludeDir.Nuklear}"
 	}
 

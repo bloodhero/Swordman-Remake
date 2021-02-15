@@ -81,19 +81,12 @@ namespace meow {
 			case SDL_WINDOWEVENT_RESTORED:
 				isMinimized = false;
 				break;
-
-			default:
-
-				break;
 			}
 
 			break;
 
 		case SDL_QUIT:
 			onClose();
-			break;
-
-		default:
 			break;
 		}
 	}

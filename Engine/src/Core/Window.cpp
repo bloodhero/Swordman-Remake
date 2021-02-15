@@ -54,7 +54,7 @@ namespace meow {
 			windowTitle = title;
 			SDL_SetWindowTitle(windowHandle, title.data());
 
-			LOGGER->trace("Window title : {}", title.data());
+			LOGGER->trace("Window title : {}", windowTitle.c_str());
 		}
 	}
 
@@ -67,7 +67,7 @@ namespace meow {
 			SDL_SetWindowIcon(windowHandle, surface);
 			SDL_FreeSurface(surface);
 
-			LOGGER->trace("Window icon file is {}", icon_file.data());
+			LOGGER->trace("Window icon file is {}", windowIcon.c_str());
 		}
 	}
 

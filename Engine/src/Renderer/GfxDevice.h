@@ -32,6 +32,8 @@ namespace meow {
 	{
 
 	public:
+		SdlGfxDevice() = default;
+		~SdlGfxDevice() = default;
 		void setClearColor(Color color) override;
 		void setLogicalSize(Vector2i size) override;
 		Color getClearColor() override;

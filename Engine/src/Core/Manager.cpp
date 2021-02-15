@@ -1,5 +1,10 @@
 #include "pch.h"
+#include "Audio/Audio.h"
 #include "Core/Manager.h"
+#include "Core/Log.h"
+#include "Core/Window.h"
+#include "Nuklear/Nuklear.h"
+#include "Renderer/GfxDevice.h"
 
 namespace meow {
 	struct Manager::Impl
@@ -67,36 +72,42 @@ namespace meow {
 
 	void Manager::setAudio(Audio* a)
 	{
+		if (m_Pimpl->audio) delete m_Pimpl->audio;
 		m_Pimpl->audio = a;
 	}
 
 
 	void Manager::setWindow(Window* w)
 	{
+		if (m_Pimpl->window) delete m_Pimpl->window;
 		m_Pimpl->window = w;
 	}
 
 
 	void Manager::setGfxDevice(GfxDevice* g)
 	{
+		if (m_Pimpl->gfxDevice) delete m_Pimpl->gfxDevice;
 		m_Pimpl->gfxDevice = g;
 	}
 
 
 	void Manager::setCoreLog(Log* l)
 	{
+		if (m_Pimpl->coreLog) delete m_Pimpl->coreLog;
 		m_Pimpl->coreLog = l;
 	}
 
 
 	void Manager::setClientLog(Log* l)
 	{
+		if (m_Pimpl->clientLog) delete m_Pimpl->clientLog;
 		m_Pimpl->clientLog = l;
 	}
 
 
 	void Manager::setNuklear(Nuklear* n)
 	{
+		if (m_Pimpl->nuklear) delete m_Pimpl->nuklear;
 		m_Pimpl->nuklear = n;
 	}
 

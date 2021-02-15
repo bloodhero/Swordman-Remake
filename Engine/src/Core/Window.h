@@ -36,6 +36,7 @@ namespace meow {
 
 	public:
 		SdlWindow();
+		~SdlWindow() = default;
 		bool isResizable() override;
 		bool isFullScreen() override;
 		bool isVSync() override;

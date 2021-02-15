@@ -18,57 +18,38 @@ namespace meow {
 		logSinks.emplace_back(std::make_shared<spdlog::sinks::stdout_color_sink_mt>());
 		logSinks.emplace_back(std::make_shared<spdlog::sinks::basic_file_sink_mt>(filename.data(), true));
 
-		logSinks[0]->set_pattern("%^[%T] %n: %v%$");
-		logSinks[1]->set_pattern("[%T] [%l] %n: %v");
+		logSinks[0]->set_pattern("[%T] [%l] %n: %v");
+		logSinks[1]->set_pattern("[%T] [%l]: %v");
 
-		m_Pimpl->logger = std::make_shared<spdlog::logger>("SWORDMAN", begin(logSinks), end(logSinks));
+		m_Pimpl->logger = std::make_shared<spdlog::logger>(filename.data(), begin(logSinks), end(logSinks));
 		spdlog::register_logger(m_Pimpl->logger);
 		m_Pimpl->logger->set_level(spdlog::level::trace);
 		m_Pimpl->logger->flush_on(spdlog::level::trace);
 	}
 
-	void spdlogLog::trace(const char* fmt, ...)
+
+	void spdlogLog::log_message(LogLevel level, std::string_view message)
 	{
-		va_list args;
-		va_start(args, fmt);
-		m_Pimpl->logger->info(fmt, args);
-		va_end(args);
-	}
-
-
-	void spdlogLog::info(const char* fmt, ...)
-	{
-		va_list args;
-		va_start(args, fmt);
-		m_Pimpl->logger->info(fmt, args);
-		va_end(args);
-	}
-
-
-	void spdlogLog::warn(const char* fmt, ...)
-	{
-		va_list args;
-		va_start(args, fmt);
-		m_Pimpl->logger->warn(fmt, args);
-		va_end(args);
-	}
-
-
-	void spdlogLog::error(const char* fmt, ...)
-	{
-		va_list args;
-		va_start(args, fmt);
-		m_Pimpl->logger->error(fmt, args);
-		va_end(args);
-	}
-
-
-	void spdlogLog::critical(const char* fmt, ...)
-	{
-		va_list args;
-		va_start(args, fmt);
-		m_Pimpl->logger->critical(fmt, args);
-		va_end(args);
+		switch (level)
+		{
+		case Log::LogLevel::trace:
+			m_Pimpl->logger->trace(message.data());
+			break;
+		case Log::LogLevel::info:
+			m_Pimpl->logger->info(message.data());
+			break;
+		case Log::LogLevel::warn:
+			m_Pimpl->logger->warn(message.data());
+			break;
+		case Log::LogLevel::error:
+			m_Pimpl->logger->error(message.data());
+			break;
+		case Log::LogLevel::critical:
+			m_Pimpl->logger->critical(message.data());
+			break;
+		default:
+			break;
+		}
 	}
 
 }

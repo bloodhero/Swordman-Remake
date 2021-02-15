@@ -2,6 +2,7 @@
 
 #include <string>
 #include <memory>
+#include <spdlog/fmt/fmt.h>
 
 
 namespace meow {
@@ -9,22 +10,59 @@ namespace meow {
 	class Log
 	{
 	public:
-		virtual ~Log() = default;
-		virtual void trace(const char* fmt, ...) = 0;
-		virtual void info(const char* fmt, ...) = 0;
-		virtual void warn(const char* fmt, ...) = 0;
-		virtual void error(const char* fmt, ...) = 0;
-		virtual void critical(const char* fmt, ...) = 0;
+		enum class LogLevel
+		{
+			trace,
+			info,
+			warn,
+			error,
+			critical
+		};
+
+		template<typename... Args>
+		void trace(Args... args)
+		{
+			std::string message = fmt::format(std::forward<Args>(args)...);
+			log_message(LogLevel::trace, message);
+		}
+
+		template<typename... Args>
+		void info(Args... args)
+		{
+			std::string message = fmt::format(std::forward<Args>(args)...);
+			log_message(LogLevel::info, message);
+		}
+
+		template<typename... Args>
+		void warn(Args... args)
+		{
+			sstd::string message = fmt::format(std::forward<Args>(args)...);
+			log_message(LogLevel::warn, message);
+		}
+
+		template<typename... Args>
+		void error(Args... args)
+		{
+			std::string message = fmt::format(std::forward<Args>(args)...);
+			log_message(LogLevel::error, message);
+		}
+
+		template<typename... Args>
+		void critical(Args... args)
+		{
+			std::string message = fmt::format(std::forward<Args>(args)...);
+			log_message(LogLevel::critical, message);
+		}
+
+	protected:
+		virtual void log_message(LogLevel level, std::string_view message) = 0;
 	};
+
 
 	class NullLog :public Log
 	{
-	public:
-		void trace(const char* fmt, ...) override {}
-		void info(const char* fmt, ...) override {}
-		void warn(const char* fmt, ...) override {}
-		void error(const char* fmt, ...) override {}
-		void critical(const char* fmt, ...) override {}
+	protected:
+		void log_message(LogLevel level, std::string_view message) override {}
 
 	};
 
@@ -32,14 +70,14 @@ namespace meow {
 	{
 	public:
 		spdlogLog(std::string_view filename);
-		void trace(const char* fmt, ...) override;
-		void info(const char* fmt, ...) override;
-		void warn(const char* fmt, ...) override;
-		void error(const char* fmt, ...) override;
-		void critical(const char* fmt, ...) override;
+		~spdlogLog() = default;
 
 	private:
 		struct Impl;
 		std::unique_ptr<Impl> m_Pimpl;
+
+	protected:
+		void log_message(LogLevel level, std::string_view message) override;
+
 	};
 }

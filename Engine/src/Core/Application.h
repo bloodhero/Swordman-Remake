@@ -23,7 +23,7 @@ namespace meow {
 		Vector2i size = {800, 600};
 		bool isFullScreen = false;
 		bool isResizable = true;
-		bool isEnableLog = false;
+		bool isEnableLog = true;
 	};
 
 	class Application

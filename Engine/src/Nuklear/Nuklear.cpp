@@ -72,7 +72,7 @@ namespace meow {
 	void SdlsurfaceNuklear::Impl::begin()
 	{
 		auto resolution = Manager::getManager()->getWindow()->getResolution();
-		SDL_Surface* surface = SDL_CreateRGBSurfaceWithFormat(0, resolution.x, resolution.y, 32, SDL_PIXELFORMAT_ARGB8888);
+		surface = SDL_CreateRGBSurfaceWithFormat(0, resolution.x, resolution.y, 32, SDL_PIXELFORMAT_ARGB8888);
 		context = nk_sdlsurface_init(surface, 13.0f);
 	}
 
@@ -134,7 +134,7 @@ namespace meow {
 
 	void* SdlsurfaceNuklear::Impl::getContext()
 	{
-		return context;
+		return &context->ctx;
 	}
 
 

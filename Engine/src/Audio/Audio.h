@@ -34,6 +34,7 @@ namespace meow {
 	class NullAudio :public Audio
 	{
 	public:
+		~NullAudio() = default;
 		void playSFX(MixChunk* chunk) override { std::cout << "playing sfx : " << chunk->getName() << std::endl; }
 		void playMusic(MixChunk* chunk, bool loop) override { std::cout << "playing music: " << chunk->getName() << std::endl; }
 		void playMusics(std::vector<MixChunk*> chunks, bool loop) override { std::cout << "playing number musics: " << chunks.size() << std::endl; }
