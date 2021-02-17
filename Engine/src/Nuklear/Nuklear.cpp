@@ -58,7 +58,7 @@ namespace meow {
 	{
 		SDL_Surface* surface;
 		struct sdlsurface_context* context;
-		struct nk_color clear = { 0,100,0,255 };
+		struct nk_color clear = { 0,0,0,0 };
 		struct nk_vec2 vec;
 		void begin();
 		void end();
@@ -71,8 +71,8 @@ namespace meow {
 
 	void SdlsurfaceNuklear::Impl::begin()
 	{
-		auto resolution = Manager::getManager()->getWindow()->getResolution();
-		surface = SDL_CreateRGBSurfaceWithFormat(0, resolution.x, resolution.y, 32, SDL_PIXELFORMAT_ARGB8888);
+		auto size = Manager::getManager()->getGfxDevice()->getLogicalSize();
+		surface = SDL_CreateRGBSurfaceWithFormat(0, size.x, size.y, 32, SDL_PIXELFORMAT_ARGB8888);
 		context = nk_sdlsurface_init(surface, 13.0f);
 	}
 
@@ -127,7 +127,6 @@ namespace meow {
 			vec.x = event.wheel.x;
 			vec.y = event.wheel.y;
 			nk_input_scroll(&(context->ctx), vec);
-
 			break;
 		}
 	}
@@ -136,7 +135,6 @@ namespace meow {
 	{
 		return &context->ctx;
 	}
-
 
 	SdlsurfaceNuklear::SdlsurfaceNuklear() :
 		m_Pimpl(std::make_unique<Impl>())

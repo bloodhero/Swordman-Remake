@@ -1,7 +1,6 @@
 #include "Engine.h"
 #include <nuklear.h>
-#include "Core/Manager.h"
-#include "Nuklear/Nuklear.h"
+
 namespace meow {
 
 	class StartScene :public Scene
@@ -34,7 +33,10 @@ namespace meow {
 				static int property = 20;
 				nk_layout_row_static(context, 30, 80, 1);
 				if (nk_button_label(context, "button")) {
-					printf("button pressed\n");
+					auto chunk2 = new OpenALMixChunk("data/Music_01.mp3");
+					Manager::getManager()->getAudio()->playSFX(chunk2);
+					Manager::getManager()->getAudio()->setSFXVolume(1);
+
 				}
 				nk_layout_row_dynamic(context, 40, 2);
 				if (nk_option_label(context, "easy", op == EASY)) op = EASY;

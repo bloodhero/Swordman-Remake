@@ -35,7 +35,7 @@ namespace meow {
 		nuklear->begin();
 		while (isRunning)
 		{
-			ts.update();
+			ts.onUpdate();
 
 			// 处理事件
 			nuklear->eventBegin();
@@ -48,8 +48,11 @@ namespace meow {
 
 			if (!isMinimized)
 			{
-			// 更新
+				// 更新
 				sceneStack->getCurrentScene()->onUpdate(ts.getMilliseconds());
+
+				// 音频
+				manager->getAudio()->onUpdate(ts.getMilliseconds());
 
 				// 渲染
 				manager->getGfxDevice()->clearScreen();
@@ -88,6 +91,7 @@ namespace meow {
 		case SDL_QUIT:
 			onClose();
 			break;
+
 		}
 	}
 
@@ -115,14 +119,15 @@ namespace meow {
 			manager->setCoreLog(new NullLog());
 		}
 
-		manager->setAudio(new NullAudio());
+		manager->setAudio(new OpenALAudio());
 		manager->setWindow(new SdlWindow());
 		manager->setGfxDevice(new SdlGfxDevice());
 		manager->setNuklear(new SdlsurfaceNuklear());
 
 		manager->getWindow()->setWindowTitle(app_cfg.windowTitle);
 		manager->getWindow()->setWindowIcon(app_cfg.windowIcon);
-		manager->getGfxDevice()->setLogicalSize(app_cfg.size);
+		manager->getWindow()->setResolution(app_cfg.resolution);
+		manager->getGfxDevice()->setLogicalSize(app_cfg.logicalSize);
 		manager->getWindow()->setFullScreen(app_cfg.isFullScreen);
 		manager->getWindow()->setResizable(app_cfg.isResizable);
 

@@ -840,7 +840,7 @@ nk_sdlsurface_init(SDL_Surface *fb, float fontSize)
     nk_font_atlas_end(&sdlsurface->atlas, nk_handle_ptr(NULL), NULL);
     if (sdlsurface->atlas.default_font)
         nk_style_set_font(&sdlsurface->ctx, &sdlsurface->atlas.default_font->handle);
-    nk_style_load_all_cursors(&sdlsurface->ctx, sdlsurface->atlas.cursors);
+    //nk_style_load_all_cursors(&sdlsurface->ctx, sdlsurface->atlas.cursors);
     nk_sdlsurface_scissor(sdlsurface, 0, 0, sdlsurface->fb->w, sdlsurface->fb->h);
 
     if (fb->format->format == SDL_PIXELFORMAT_RGBA8888)

@@ -13,7 +13,7 @@ namespace meow {
 
 	}
 
-	void Timestep::update()
+	void Timestep::onUpdate()
 	{
 		m_CurrentTime = SDL_GetTicks();
 		m_Timestep = m_CurrentTime - m_LastFrameTime;

@@ -1,18 +1,12 @@
 #pragma once
 
-#include "Core/Utils.h"
+#include "Audio/Audio.h"
+#include "Core/Window.h"
+#include "Renderer/GfxDevice.h"
+#include "Core/Log.h"
+#include "Nuklear/Nuklear.h"
 
 namespace meow {
-	class EventPackage;
-	class Scene;
-	class SceneStack;
-	class Layer;
-	class Application;
-	class Audio;
-	class Log;
-	class Window;
-	class GfxDevice;
-	class Nuklear;
 
 	class Manager
 	{

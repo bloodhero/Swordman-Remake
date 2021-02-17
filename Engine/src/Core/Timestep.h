@@ -13,7 +13,7 @@ namespace meow {
 		~Timestep() = default;
 
 		// ACCESSORS
-		void update();
+		void onUpdate();
 		float getSeconds() const;
 		float getMilliseconds() const;
 
