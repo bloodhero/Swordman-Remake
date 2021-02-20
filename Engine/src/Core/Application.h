@@ -20,8 +20,8 @@ namespace meow {
 		std::string windowTitle = "Swordman";
 		std::string windowIcon = "";
 		std::string resourceDir = "";
-		Vector2i logicalSize = { 384, 240};
-		Vector2i resolution = { 384 * 2, 240 * 2 };
+		Vector2i logicalSize = { 400, 240};
+		Vector2i resolution = { 800, 480 };
 		bool isFullScreen = false;
 		bool isResizable = true;
 		bool isEnableLog = true;
@@ -42,13 +42,13 @@ namespace meow {
 		void replaceScene(Scene* scene);
 		void pushScene(Scene* scene);
 		void popScene();
+		Scene* getCurrentScene();
 
 	private:
 		Application();
 
 		struct Impl;
 		std::unique_ptr<Impl> m_Pimpl;
-		static Application* s_Instance;
 	};
 
 	// To be defined in CLIENT

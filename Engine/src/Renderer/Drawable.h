@@ -4,7 +4,7 @@
 #include <memory>
 #include "Math/Vector2.h"
 #include "Renderer/Renderable.h"
-
+#include "Core/Utils.h"
 
 
 namespace meow {
@@ -20,7 +20,9 @@ namespace meow {
 		virtual void onDraw() = 0;
 		virtual void onUpdate(float time) = 0;
 		virtual void setPosition(Vector2f pos) = 0;
+		virtual void setAnchorPoint(Vector2f anchor) = 0;
 		virtual Rect getArea() = 0;
+		virtual void setSize(Vector2i size) = 0;
 	};
 
 
@@ -33,49 +35,54 @@ namespace meow {
 			PLAY_ONCE,
 			BACK_FORTH
 		};
-
 		// CREARTORS
-		~Animation() = default;
-		virtual bool isEnd() = 0;
-		virtual void skip() = 0;
-		virtual void reset() = 0;
-	};
+		Animation();
+		Animation(std::string_view json_file, Camera* cam);
+		void setType(AnimationType type);
+		void setName(std::string_view name);
+		void setDesc(std::string_view desc);
+		void setDurationPerFrame(int time);
+		void setPosition(Vector2f pos);
+		void setAnchorPoint(Vector2f anchor);
+		void setSize(Vector2i size);
+		void pushGfxFrame(Renderable r);
+		void pushSfxFrame(int key_frame, MixChunk* sfx);
+		void setCamera(Camera* cam);
+		void setLoop(bool loop);
+		void setUp();
 
-	class Picture :public Drawable
-	{
-	public:
-		void onUpdate(float time) override {}
-		virtual void setAnchorPoint(float x, float y) = 0;
+		// ACCESSORS
+		Rect getArea();
+		bool isEnd();
+		void syncTo(Animation* other);
 
-	};
+		// MANIPULATORS
+		void onDraw();
+		void onUpdate(float time);
+		void skip();
+		void setSpeed(float speed);
+		void reset();
 
-	class SdlAnimation :public Animation
-	{
-	public:
-		SdlAnimation(std::string_view json_file, Camera* cam);
-		void onDraw() override;
-		void onUpdate(float time) override;
-		void setPosition(Vector2f pos) override;
-		Rect getArea() override;
-		bool isEnd() override;
-		void skip() override;
-		void reset() override;
 
 	private:
-		void pushGfxFrame(Renderable* r);
-		void pushSfxFrame(int key_frame, MixChunk* sfx);
 
 		struct Impl;
 		std::unique_ptr<Impl> m_Pimpl;
 	};
 
-	class SdlPicture :public Picture
+
+	class Picture :public Drawable
 	{
 	public:
-		void onDraw() override;
-		void setPosition(Vector2f pos) override;
-		Rect getArea() override;
-		void setAnchorPoint(float x, float y) override;
+		Picture(std::string_view filename, Camera* cam);
+		Picture(Renderable ra, Camera* cam);
+		~Picture();
+		void onDraw();
+		void setPosition(Vector2f pos);
+		Rect getArea();
+		void setAnchorPoint(Vector2f anchor);
+		void onUpdate(float time);
+		void setSize(Vector2i size);
 
 	private:
 

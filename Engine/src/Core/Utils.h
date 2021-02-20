@@ -1,7 +1,8 @@
 #pragma once
 
 #include "Core/Log.h"
-#include "Manager.h"
+#include "Core/Manager.h"
+#include <memory>
 
 #define BIT(x) (1 << x)
 
@@ -36,3 +37,25 @@
 #else
 #define HZ_FUNC_SIG "HZ_FUNC_SIG unknown!"
 #endif
+
+namespace meow {
+	std::string dirName(std::string source);
+
+	template<typename T>
+	using Shared = std::shared_ptr<T>;
+	template<typename T, typename ... Args>
+	constexpr Shared<T> CreateShared(Args&& ... args)
+	{
+		return std::make_shared<T>(std::forward<Args>(args)...);
+	}
+
+
+
+	template<typename T>
+	using Unique = std::unique_ptr<T>;
+	template<typename T, typename ... Args>
+	constexpr Unique<T> CreateUnique(Args&& ... args)
+	{
+		return std::make_unique<T>(std::forward<Args>(args)...);
+	}
+}

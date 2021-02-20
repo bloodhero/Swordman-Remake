@@ -1,0 +1,292 @@
+[
+  {
+    "layers": [
+      {
+        "file": "0.png",
+        "x": 121,
+        "y": 74
+      }
+    ],
+    "sound": null
+  },
+  {
+    "layers": [
+      {
+        "file": "1.png",
+        "x": 105,
+        "y": 64
+      }
+    ],
+    "sound": null
+  },
+  {
+    "layers": [
+      {
+        "file": "2.png",
+        "x": 92,
+        "y": 56
+      }
+    ],
+    "sound": "0.wav"
+  },
+  {
+    "layers": [
+      {
+        "file": "3.png",
+        "x": 81,
+        "y": 47
+      }
+    ],
+    "sound": null
+  },
+  {
+    "layers": [
+      {
+        "file": "4.png",
+        "x": 72,
+        "y": 40
+      }
+    ],
+    "sound": null
+  },
+  {
+    "layers": [
+      {
+        "file": "5.png",
+        "x": 63,
+        "y": 35
+      }
+    ],
+    "sound": null
+  },
+  {
+    "layers": [
+      {
+        "file": "6.png",
+        "x": 55,
+        "y": 28
+      }
+    ],
+    "sound": null
+  },
+  {
+    "layers": [
+      {
+        "file": "7.png",
+        "x": 47,
+        "y": 22
+      }
+    ],
+    "sound": null
+  },
+  {
+    "layers": [
+      {
+        "file": "8.png",
+        "x": 40,
+        "y": 15
+      }
+    ],
+    "sound": null
+  },
+  {
+    "layers": [
+      {
+        "file": "9.png",
+        "x": 33,
+        "y": 11
+      }
+    ],
+    "sound": null
+  },
+  {
+    "layers": [
+      {
+        "file": "10.png",
+        "x": 27,
+        "y": 5
+      }
+    ],
+    "sound": null
+  },
+  {
+    "layers": [
+      {
+        "file": "11.png",
+        "x": 21,
+        "y": 0
+      }
+    ],
+    "sound": null
+  },
+  {
+    "layers": [
+      {
+        "file": "12.png",
+        "x": 15,
+        "y": 0
+      }
+    ],
+    "sound": null
+  },
+  {
+    "layers": [
+      {
+        "file": "13.png",
+        "x": 10,
+        "y": 0
+      }
+    ],
+    "sound": null
+  },
+  {
+    "layers": [
+      {
+        "file": "14.png",
+        "x": 5,
+        "y": 0
+      }
+    ],
+    "sound": null
+  },
+  {
+    "layers": [
+      {
+        "file": "15.png",
+        "x": 1,
+        "y": 0
+      }
+    ],
+    "sound": null
+  },
+  {
+    "layers": [
+      {
+        "file": "16.png",
+        "x": 0,
+        "y": 0
+      }
+    ],
+    "sound": null
+  },
+  {
+    "layers": [
+      {
+        "file": "17.png",
+        "x": 0,
+        "y": 0
+      }
+    ],
+    "sound": null
+  },
+  {
+    "layers": [
+      {
+        "file": "18.png",
+        "x": 0,
+        "y": 0
+      }
+    ],
+    "sound": null
+  },
+  {
+    "layers": [
+      {
+        "file": "19.png",
+        "x": 0,
+        "y": 0
+      }
+    ],
+    "sound": null
+  },
+  {
+    "layers": [
+      {
+        "file": "20.png",
+        "x": 0,
+        "y": 0
+      }
+    ],
+    "sound": null
+  },
+  {
+    "layers": [
+      {
+        "file": "21.png",
+        "x": 0,
+        "y": 0
+      }
+    ],
+    "sound": null
+  },
+  {
+    "layers": [
+      {
+        "file": "22.png",
+        "x": 0,
+        "y": 0
+      }
+    ],
+    "sound": null
+  },
+  {
+    "layers": [
+      {
+        "file": "23.png",
+        "x": 1,
+        "y": 0
+      }
+    ],
+    "sound": null
+  },
+  {
+    "layers": [
+      {
+        "file": "24.png",
+        "x": 0,
+        "y": 0
+      }
+    ],
+    "sound": null
+  },
+  {
+    "layers": [
+      {
+        "file": "25.png",
+        "x": 0,
+        "y": 0
+      }
+    ],
+    "sound": null
+  },
+  {
+    "layers": [
+      {
+        "file": "26.png",
+        "x": 0,
+        "y": 0
+      }
+    ],
+    "sound": null
+  },
+  {
+    "layers": [
+      {
+        "file": "27.png",
+        "x": 0,
+        "y": 0
+      }
+    ],
+    "sound": null
+  },
+  {
+    "layers": [
+      {
+        "file": "28.png",
+        "x": 6,
+        "y": 0
+      }
+    ],
+    "sound": null
+  }
+]

@@ -130,7 +130,7 @@ namespace meow {
 	template <class T>
 	inline Vector2<T> Vector2<T>::operator-() const
 	{
-		return Vector2(-x, -y);
+		return Vector2<T>(-x, -y);
 	}
 
 	template <class T>
@@ -208,56 +208,56 @@ namespace meow {
 	template <class T>
 	inline Vector2<T> Vector2<T>::operator+(const Vector2& v) const
 	{
-		return Vector2(x + v.x,
+		return Vector2<T>(x + v.x,
 			y + v.y);
 	}
 
 	template <class T>
 	inline Vector2<T> Vector2<T>::operator-(const Vector2& v) const
 	{
-		return Vector2(x - v.x,
+		return Vector2<T>(x - v.x,
 			y - v.y);
 	}
 
 	template <class T>
 	inline Vector2<T> Vector2<T>::operator*(const Vector2& v) const
 	{
-		return Vector2(x * v.x,
+		return Vector2<T>(x * v.x,
 			y * v.y);
 	}
 
 	template <class T>
 	inline Vector2<T> Vector2<T>::operator/(const Vector2& v) const
 	{
-		return Vector2(x / v.x,
+		return Vector2<T>(x / v.x,
 			y / v.y);
 	}
 
 	template <class T>
 	inline Vector2<T> Vector2<T>::operator+(T s) const
 	{
-		return Vector2(x + s,
+		return Vector2<T>(x + s,
 			y + s);
 	}
 
 	template <class T>
 	inline Vector2<T> Vector2<T>::operator-(T s) const
 	{
-		return Vector2(x - s,
+		return Vector2<T>(x - s,
 			y - s);
 	}
 
 	template <class T>
 	inline Vector2<T> Vector2<T>::operator*(T s) const
 	{
-		return Vector2(x * s,
+		return Vector2<T>(x * s,
 			y * s);
 	}
 
 	template <class T>
 	inline Vector2<T> Vector2<T>::operator/(T s) const
 	{
-		return Vector2(x / s,
+		return Vector2<T>(x / s,
 			y / s);
 	}
 
@@ -284,7 +284,7 @@ namespace meow {
 	inline Vector2<T> Vector2<T>::normalized() const
 	{
 		const T len = length();
-		return Vector2(x / len, y / len);
+		return Vector2<T>(x / len, y / len);
 	}
 
 	template <class T>

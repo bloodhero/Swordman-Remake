@@ -97,8 +97,7 @@ namespace meow {
 		ASSERT(windowHandle, "SDL: Failed to initialize the SDL window. {}", SDL_GetError());
 
 		// create renderer context
-		rendererHandle = SDL_CreateRenderer(windowHandle, -1, SDL_RENDERER_ACCELERATED);
-
+		rendererHandle = SDL_CreateRenderer(windowHandle, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE);
 
 		LOGGER->trace("SDL initialized.");
 

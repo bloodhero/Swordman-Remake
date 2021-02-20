@@ -5,6 +5,8 @@
 #include "Core/Window.h"
 #include "Nuklear/Nuklear.h"
 #include "Renderer/GfxDevice.h"
+#include "Application.h"
+#include "Core/Layer.h"
 
 namespace meow {
 	struct Manager::Impl
@@ -15,6 +17,7 @@ namespace meow {
 		Log* coreLog = nullptr;
 		Log* clientLog = nullptr;
 		Nuklear* nuklear = nullptr;
+		PostEffect* postEffect = nullptr;
 		~Impl();
 	};
 
@@ -26,6 +29,7 @@ namespace meow {
 		delete coreLog;
 		delete clientLog;
 		delete nuklear;
+		delete postEffect;
 	}
 
 
@@ -70,6 +74,11 @@ namespace meow {
 	}
 
 
+	meow::PostEffect* Manager::getPostEffect()
+	{
+		return m_Pimpl->postEffect;
+	}
+
 	void Manager::setAudio(Audio* a)
 	{
 		if (m_Pimpl->audio) delete m_Pimpl->audio;
@@ -111,6 +120,60 @@ namespace meow {
 		m_Pimpl->nuklear = n;
 	}
 
+
+	void Manager::setPostEffect(PostEffect* p)
+	{
+		if (m_Pimpl->postEffect) delete m_Pimpl->postEffect;
+		m_Pimpl->postEffect = p;
+	}
+
+
+	void Manager::pushLayer(Layer* l)
+	{
+		Application::getApplication()->getCurrentScene()->getLayerStack()->PushLayer(l);
+	}
+
+
+	void Manager::pushOverlay(Layer* l)
+	{
+		Application::getApplication()->getCurrentScene()->getLayerStack()->PushOverlay(l);
+	}
+
+
+	void Manager::popLayer(Layer* l)
+	{
+		Application::getApplication()->getCurrentScene()->getLayerStack()->PopLayer(l);
+	}
+
+
+	void Manager::popOverlay(Layer* l)
+	{
+		Application::getApplication()->getCurrentScene()->getLayerStack()->PopOverlay(l);
+	}
+
+
+	void Manager::runWithScene(Scene* s)
+	{
+		Application::getApplication()->runWithScene(s);
+	}
+
+
+	void Manager::replaceScene(Scene* s)
+	{
+		Application::getApplication()->replaceScene(s);
+	}
+
+
+	void Manager::pushScene(Scene* s)
+	{
+		Application::getApplication()->pushScene(s);
+	}
+
+
+	void Manager::popScene()
+	{
+		Application::getApplication()->popScene();
+	}
 
 	Manager::Manager()
 		:m_Pimpl(std::make_unique<Impl>())

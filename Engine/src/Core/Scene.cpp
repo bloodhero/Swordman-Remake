@@ -70,6 +70,7 @@ namespace meow {
 	Scene::Scene() :
 		m_LayerStack(new LayerStack())
 	{
+
 	}
 
 

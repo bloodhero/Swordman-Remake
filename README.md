@@ -22,13 +22,17 @@
 - SDL2
 - stb_image 图片解码
 - spdlog 日志记录
+- gettext 本地化工具
 
-命名规范：
-- 类型名使用大驼峰命名法，类型包括Classes, Structures, Unions, Typedefs, Templates
-- 数据成员使用带前缀的大驼峰命名法
-- 成员函数使用小驼峰命名法
-- 常量、枚举、宏 使用大写命名法
-- 局部变量和命名空间使用蛇形命名法
+命名规范和约定：
+- 类型名使用大驼峰命名法，类型包括Classes, Structures, Unions, Typedefs, Templates。例如 CircleShape
+- 数据成员使用带前缀的大驼峰命名法。例如 m_FileName
+- 成员函数使用小驼峰命名法。例如 isLooped
+- struct 数据成员做成员函数对待
+- 常量、枚举、宏 使用大写命名法。
+- 局部变量和命名空间使用蛇形命名法。例如 src_rect
+- 代码块({})之间留白2行
+- 头文件尽可能使用前置声明
 
 成员函数分类：
 - CREARTORS 管理对象的构建与销毁

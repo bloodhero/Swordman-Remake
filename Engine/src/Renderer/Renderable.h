@@ -1,8 +1,13 @@
 #pragma once
 
-#include "Math/Vector2.h"
+#include <optional>
+#include <memory>
+#include "Core/Utils.h"
 
 namespace meow {
+
+
+
 	class Texture;
 
 	struct Rect
@@ -21,7 +26,6 @@ namespace meow {
 		int a;
 	};
 
-
 	struct Renderable
 	{
 		enum class BlendMode
@@ -31,10 +35,11 @@ namespace meow {
 			ADD,
 			MOD
 		};
-		Texture* texture;
-		Rect slice;
-		float alphaMod;
-		BlendMode blendMode;
-		Color colorMod;
+
+		std::shared_ptr<Texture> texture;
+		std::optional<Rect> slice;
+		std::optional<float> alphaMod;
+		std::optional<BlendMode> blendMode;
+		std::optional<Color> colorMod;
 	};
 }

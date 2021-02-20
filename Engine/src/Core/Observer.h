@@ -1,13 +1,12 @@
 #pragma once
 
-#include "Events/Event.h"
 
 namespace meow {
 	class Observer
 	{
 	public:
 		virtual ~Observer() = default;
-		virtual void onNotify(Event event) = 0;
+		virtual void onNotify() = 0;
 	};
 
 	class Subject
@@ -16,6 +15,6 @@ namespace meow {
 		void addObserver(Observer* observer);
 		void removeObserver(Observer* observer);
 	protected:
-		void notify(Event event);
+		void notify();
 	};
 }

@@ -3,6 +3,7 @@
 #include "Core/Window.h"
 #include "Core/Manager.h"
 #include "Renderer/GfxDevice.h"
+#include "Renderer/Camera.h"
 
 namespace meow {
 
@@ -18,6 +19,7 @@ namespace meow {
 	void SdlGfxDevice::setLogicalSize(Vector2i size)
 	{
 		SDL_RenderSetLogicalSize(getSdlRenderer(), size.x, size.y);
+		Camera::setSize(size);
 	}
 
 

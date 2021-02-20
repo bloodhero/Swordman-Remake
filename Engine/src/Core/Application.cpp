@@ -10,6 +10,7 @@
 #include "Audio/Audio.h"
 #include "Core/Window.h"
 #include "Nuklear/Nuklear.h"
+#include "Renderer/Camera.h"
 
 namespace meow {
 
@@ -46,17 +47,20 @@ namespace meow {
 			}
 			nuklear->eventEnd();
 
+			// 更新
+			sceneStack->getCurrentScene()->onUpdate(ts.getMilliseconds());
+			Camera::onUpdate(ts.getMilliseconds());
+			manager->getAudio()->onUpdate(ts.getMilliseconds());
+
 			if (!isMinimized)
 			{
-				// 更新
-				sceneStack->getCurrentScene()->onUpdate(ts.getMilliseconds());
-
-				// 音频
-				manager->getAudio()->onUpdate(ts.getMilliseconds());
-
 				// 渲染
+				manager->getPostEffect()->begin();
 				manager->getGfxDevice()->clearScreen();
 				sceneStack->getCurrentScene()->onDraw();
+				manager->getPostEffect()->end();
+
+				// UI不做后期处理
 				sceneStack->getCurrentScene()->onNuklear();
 				nuklear->render();
 				manager->getGfxDevice()->updateScreen();
@@ -123,6 +127,7 @@ namespace meow {
 		manager->setWindow(new SdlWindow());
 		manager->setGfxDevice(new SdlGfxDevice());
 		manager->setNuklear(new SdlsurfaceNuklear());
+		manager->setPostEffect(new NullPostEffect());
 
 		manager->getWindow()->setWindowTitle(app_cfg.windowTitle);
 		manager->getWindow()->setWindowIcon(app_cfg.windowIcon);
@@ -167,6 +172,12 @@ namespace meow {
 	void Application::popScene()
 	{
 		m_Pimpl->sceneStack->popScene();
+	}
+
+
+	meow::Scene* Application::getCurrentScene()
+	{
+		return m_Pimpl->sceneStack->getCurrentScene();
 	}
 
 }
