@@ -1,0 +1,12 @@
+#version 410
+
+in vec2 v_uv;
+out vec4 out_col;
+
+uniform sampler2D u_screen_texture;
+
+void main()
+{
+	vec2 lookup = vec2(v_uv.x, v_uv.y);
+	out_col = texture(u_screen_texture, lookup);
+}
