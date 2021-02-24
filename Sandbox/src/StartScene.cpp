@@ -19,7 +19,7 @@ namespace meow {
 			static int property = 20;
 			nk_layout_row_static(context, 30, 80, 1);
 			if (nk_button_label(context, "button")) {
-				OpenALMixChunk* chunk = new OpenALMixChunk("0.wav");
+				OpenALMixChunk* chunk = new OpenALMixChunk("data/Music_00.mp3");
 				Manager::getManager()->getAudio()->playSFX(chunk);
 
 			}
@@ -30,6 +30,18 @@ namespace meow {
 			nk_property_int(context, "Compression:", 0, &property, 100, 10, 1);
 		}
 		nk_end(context);
+
+	}
+
+
+	void StartScene::onCreate()
+	{
+
+	}
+
+
+	void StartScene::onDestroy()
+	{
 
 	}
 

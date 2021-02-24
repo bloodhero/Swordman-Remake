@@ -1,129 +1,114 @@
 #include "pch.h"
 #include "Renderer/PostEffect.h"
 #include <SDL.h>
+#include "Core/Utils.h"
 
 namespace meow {
 
-	static SDL_Renderer* getSdlRenderer()
+	struct PostEffect::Impl
 	{
-		static SDL_Renderer* sdl_renderer = nullptr;
-		if (sdl_renderer) return sdl_renderer;
-		SdlWindow* sdl_window = static_cast<SdlWindow*>(Manager::getManager()->getWindow());
-		sdl_renderer = static_cast<SDL_Renderer*>(sdl_window->getRawRenderer());
-		return sdl_renderer;
-	}
+		Impl();
+		~Impl() = default;
 
-
-	struct SdlPostEffect::Impl
-	{
-		Impl() = default;
-		~Impl();
-		Vector2i size = Manager::getManager()->getGfxDevice()->getLogicalSize();
-		Rect sliceOrig = {
-			0, 0,
-			size.x,
-			size.y };
-		Color colorModOrig = { 255,255,255,255 };
-		float alphaModOrig = 1.0f;
-
-		Rect slice = sliceOrig;
-		Color colorMod = colorModOrig;
-		float alphaMod = alphaModOrig;
-
-		SDL_Texture* texture = SDL_CreateTexture(
-			getSdlRenderer(),
-			SDL_PIXELFORMAT_RGBA8888,
-			SDL_TEXTUREACCESS_TARGET,
-			size.x,
-			size.y);
-
-		void setSlice(Rect s);
-		void setAlphaMod(float a);
-		void setColorMod(Color c);
+		Vector2i size;
+		Shared<SdlCanvas> canvas;
+		Renderable ra;
 		void restore();
 		void begin();
 		void end();
+		void setSlice(std::optional<Rect> s);
+		void setAlphaMod(std::optional<float> a);
+		void setColorMod(std::optional<Color> c);
 	};
 
-	void SdlPostEffect::Impl::setSlice(Rect s)
+	void PostEffect::Impl::setSlice(std::optional<Rect> s)
 	{
-		slice = s;
+		ra.slice = s;
 	}
 
-	void SdlPostEffect::Impl::setAlphaMod(float a)
+	void PostEffect::Impl::setAlphaMod(std::optional<float> a)
 	{
-		alphaMod = a;
+		ra.alphaMod = a;
 	}
 
-	void SdlPostEffect::Impl::setColorMod(Color c)
+	void PostEffect::Impl::setColorMod(std::optional<Color> c)
 	{
-		colorMod = c;
+		ra.colorMod = c;
 	}
 
-	void SdlPostEffect::Impl::restore()
+	void PostEffect::Impl::restore()
 	{
-		slice = sliceOrig;
-		alphaMod = alphaModOrig;
-		colorMod = colorModOrig;
+		ra.slice = std::nullopt;
+		ra.alphaMod = std::nullopt;
+		ra.colorMod = std::nullopt;
 	}
 
-	void SdlPostEffect::Impl::begin()
+	void PostEffect::Impl::begin()
 	{
-		SDL_RenderClear(getSdlRenderer());
-		SDL_SetRenderTarget(getSdlRenderer(), texture);
+		Manager::getManager()->getGfxDevice()->setRenderTarget(canvas.get());
 	}
 
-	void SdlPostEffect::Impl::end()
+	void PostEffect::Impl::end()
 	{
-		SDL_RenderPresent(getSdlRenderer());
-		SDL_SetRenderTarget(getSdlRenderer(), NULL);
-		SDL_SetTextureAlphaMod(texture, (Uint8)alphaMod * 255);
-		SDL_SetTextureColorMod(texture, colorMod.r, colorMod.g, colorMod.b);
-		SDL_Rect src_rect = { slice.x, slice.y, slice.w, slice.h };
-		SDL_RenderCopy(getSdlRenderer(), texture, &src_rect, NULL);
+		auto gfx = Manager::getManager()->getGfxDevice();
+		gfx->updateScreen();
+		gfx->setRenderTarget(nullptr);
+		gfx->clearScreen();
+
+		ra.draw(std::nullopt);
 	}
 
-	SdlPostEffect::Impl::~Impl()
+
+	PostEffect::Impl::Impl() :
+		size(Manager::getManager()->getGfxDevice()->getLogicalSize()),
+		canvas(CreateShared<SdlCanvas>(size.x, size.y))
 	{
-		SDL_DestroyTexture(texture);
+		ra.texture = canvas;
 	}
 
-	SdlPostEffect::~SdlPostEffect()
+
+	PostEffect::PostEffect() :
+		m_Pimpl(std::make_unique<Impl>())
 	{
 
 	}
 
-	void SdlPostEffect::setSlice(Rect s)
+	PostEffect::~PostEffect()
+	{
+
+	}
+
+	void PostEffect::setSlice(std::optional<Rect> s)
 	{
 		m_Pimpl->setSlice(s);
 	}
 
 
-	void SdlPostEffect::setAlphaMod(float a)
+	void PostEffect::setAlphaMod(std::optional<float> a)
 	{
 		m_Pimpl->setAlphaMod(a);
 	}
 
 
-	void SdlPostEffect::setColorMod(Color c)
+	void PostEffect::setColorMod(std::optional<Color> c)
 	{
 		m_Pimpl->setColorMod(c);
 	}
 
 
-	void SdlPostEffect::restore()
+	void PostEffect::restore()
 	{
 		m_Pimpl->restore();
 	}
 
 
-	void SdlPostEffect::begin()
+	void PostEffect::begin()
 	{
 		m_Pimpl->begin();
 	}
 
 
-	void SdlPostEffect::end()
+	void PostEffect::end()
 	{
 		m_Pimpl->end();
 	}

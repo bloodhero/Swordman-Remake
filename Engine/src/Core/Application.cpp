@@ -20,6 +20,7 @@ namespace meow {
 		void onClose();
 		void onEvent(SDL_Event& e);
 
+		const double MS_PER_UPDATE = 1000 / 60.0;
 		bool isRunning = true;
 		bool isMinimized = false;
 		SceneStack* sceneStack = new SceneStack();
@@ -29,6 +30,7 @@ namespace meow {
 	void Application::Impl::onRun()
 	{
 		Timestep ts;
+		double accumulator = 0.0;
 		auto manager = Manager::getManager();
 		auto nuklear = manager->getNuklear();
 		SDL_Event e;
@@ -37,6 +39,7 @@ namespace meow {
 		while (isRunning)
 		{
 			ts.onUpdate();
+			accumulator += ts.getMilliseconds();
 
 			// 处理事件
 			nuklear->eventBegin();
@@ -48,10 +51,14 @@ namespace meow {
 			nuklear->eventEnd();
 
 			// 更新
-			sceneStack->getCurrentScene()->onUpdate(ts.getMilliseconds());
-			Camera::onUpdate(ts.getMilliseconds());
-			manager->getAudio()->onUpdate(ts.getMilliseconds());
+			while (accumulator >= MS_PER_UPDATE)
+			{
+				sceneStack->getCurrentScene()->onUpdate(MS_PER_UPDATE);
+				Camera::onUpdate(MS_PER_UPDATE);
+				manager->getAudio()->onUpdate(MS_PER_UPDATE);
+				accumulator -= MS_PER_UPDATE;
 
+			}
 			if (!isMinimized)
 			{
 				// 渲染
@@ -60,7 +67,7 @@ namespace meow {
 				sceneStack->getCurrentScene()->onDraw();
 				manager->getPostEffect()->end();
 
-				// UI不做后期处理
+				// UI渲染
 				sceneStack->getCurrentScene()->onNuklear();
 				nuklear->render();
 				manager->getGfxDevice()->updateScreen();
@@ -123,11 +130,8 @@ namespace meow {
 			manager->setCoreLog(new NullLog());
 		}
 
-		manager->setAudio(new OpenALAudio());
 		manager->setWindow(new SdlWindow());
 		manager->setGfxDevice(new SdlGfxDevice());
-		manager->setNuklear(new SdlsurfaceNuklear());
-		manager->setPostEffect(new NullPostEffect());
 
 		manager->getWindow()->setWindowTitle(app_cfg.windowTitle);
 		manager->getWindow()->setWindowIcon(app_cfg.windowIcon);
@@ -136,6 +140,9 @@ namespace meow {
 		manager->getWindow()->setFullScreen(app_cfg.isFullScreen);
 		manager->getWindow()->setResizable(app_cfg.isResizable);
 
+		manager->setNuklear(new SdlSurfaceNuklear());
+		manager->setPostEffect(new PostEffect());
+		manager->setAudio(new OpenALAudio());
 	}
 
 

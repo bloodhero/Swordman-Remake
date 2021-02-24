@@ -1,7 +1,6 @@
 #include "pch.h"
 #include <SDL.h>
 #include <nlohmann/json.hpp>
-using json = nlohmann::json;
 #include <fstream>
 #include "Renderer/Drawable.h"
 #include "Core/Manager.h"
@@ -31,15 +30,6 @@ namespace meow {
 	static bool hasIntersection(Rect r1, Rect r2)
 	{
 		return SDL_HasIntersection(&rect2SDL_Rect(r1), &rect2SDL_Rect(r2)) == SDL_TRUE;
-	}
-
-	static SDL_Renderer* getSdlRenderer()
-	{
-		static SDL_Renderer* sdl_renderer = nullptr;
-		if (sdl_renderer) return sdl_renderer;
-		SdlWindow* sdl_window = static_cast<SdlWindow*>(Manager::getManager()->getWindow());
-		sdl_renderer = static_cast<SDL_Renderer*>(sdl_window->getRawRenderer());
-		return sdl_renderer;
 	}
 
 
@@ -219,27 +209,7 @@ namespace meow {
 
 			Renderable ra = gfxArray[currentFrame];
 
-			if (ra.alphaMod.has_value())
-				ra.texture->setAlphaMod(ra.alphaMod.value());
-			if (ra.colorMod.has_value())
-				ra.texture->setColorMod(ra.colorMod.value());
-			if (ra.blendMode.has_value())
-				ra.texture->setBlendMode(ra.blendMode.value());
-
-			Rect src_rect;
-			Vector2i size = ra.texture->getSize();
-			if (ra.slice.has_value())
-				src_rect = ra.slice.value();
-			else
-				src_rect = { 0, 0, size.x, size.y };
-
-
-			ra.texture->draw(src_rect, getOffset(this->getArea(), camera->getArea()));
-
-			// reset state
-			ra.texture->setAlphaMod(1.0f);
-			ra.texture->setBlendMode(Renderable::BlendMode::BLEND);
-			ra.texture->setColorMod({ 255,255,255,255 });
+			ra.draw(getOffset(this->getArea(), camera->getArea()));
 
 			int keyframe = getKeyFrame();
 			if (sfxArray.find(keyframe) != sfxArray.end())
@@ -267,8 +237,10 @@ namespace meow {
 
 			while (currentIndexF >= IndexArray.size())
 			{
-				currentIndexF -= IndexArray.size();
 				++timesPlayed;
+				currentIndexF -= IndexArray.size();
+				onUpdate(0);
+				return;
 			}
 
 			currentIndex = static_cast<int>(currentIndexF);

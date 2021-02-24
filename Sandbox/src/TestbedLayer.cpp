@@ -7,7 +7,7 @@ namespace meow {
 		cam(new Camera()),
 		picture(nullptr)
 	{
-		ani = CreateShared<Animation>("data/magic00/Animation.json", cam);
+		ani = CreateShared<Animation>("data/man_eff/Animation.json", cam);
 		LOGGER->info("dirname is {}", dirName("data/Animation.json"));
 	}
 

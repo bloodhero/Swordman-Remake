@@ -24,6 +24,12 @@ namespace meow {
 
 		void onNuklear() override;
 
+
+		void onCreate() override;
+
+
+		void onDestroy() override;
+
 	};
 
 

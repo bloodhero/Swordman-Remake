@@ -3,6 +3,7 @@
 #include <memory>
 #include "Math/Vector2.h"
 #include "Renderer/Drawable.h"
+#include "Renderer/Texture.h"
 
 namespace meow {
 
@@ -20,6 +21,7 @@ namespace meow {
 		virtual void setScaleQuality(ScaleQuality qlt) = 0;
 		virtual void setClearColor(Color color) = 0;
 		virtual void setLogicalSize(Vector2i size) = 0;
+		virtual void setRenderTarget(Canvas* canvas) = 0;
 
 		virtual Color getClearColor() = 0;
 		virtual Vector2i getLogicalSize() = 0;
@@ -41,6 +43,7 @@ namespace meow {
 		void clearScreen() override;
 		void updateScreen() override;
 		void setScaleQuality(ScaleQuality qlt) override;
+		void setRenderTarget(Canvas* canvas) override;
 
 	};
 }

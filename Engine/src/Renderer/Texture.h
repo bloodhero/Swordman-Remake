@@ -12,10 +12,10 @@ namespace meow {
 		virtual ~Texture() = default;
 		virtual void* getRawData() = 0;
 		virtual Vector2i getSize() = 0;
-		virtual void draw(Rect src, Rect dst) = 0;
-		virtual void setBlendMode(Renderable::BlendMode blend) = 0;
-		virtual void setColorMod(Color color) = 0;
-		virtual void setAlphaMod(float alpha) = 0;
+		virtual void draw(std::optional<Rect> src, std::optional<Rect> dst) = 0;
+		virtual void setBlendMode(std::optional<Renderable::BlendMode> blend) = 0;
+		virtual void setColorMod(std::optional<Color> color) = 0;
+		virtual void setAlphaMod(std::optional<float> alpha) = 0;
 	};
 
 
@@ -51,10 +51,10 @@ namespace meow {
 		SdlImage(std::string_view filename);
 		void* getRawData() override;
 		Vector2i getSize() override;
-		void draw(Rect src, Rect dst) override;
-		void setBlendMode(Renderable::BlendMode blend) override;
-		void setColorMod(Color color) override;
-		void setAlphaMod(float alpha) override;
+		void draw(std::optional<Rect> src, std::optional<Rect> dst) override;
+		void setBlendMode(std::optional<Renderable::BlendMode> blend) override;
+		void setColorMod(std::optional<Color> color) override;
+		void setAlphaMod(std::optional<float> alpha) override;
 
 	private:
 		struct Impl;
@@ -69,10 +69,10 @@ namespace meow {
 		void* getRawData() override;
 		Vector2i getSize() override;
 		void pushLayer(Renderable ra, Vector2i pos) override;
-		void draw(Rect src, Rect dst) override;
-		void setBlendMode(Renderable::BlendMode blend) override;
-		void setColorMod(Color color) override;
-		void setAlphaMod(float alpha) override;
+		void draw(std::optional<Rect> src, std::optional<Rect> dst) override;
+		void setBlendMode(std::optional<Renderable::BlendMode> blend) override;
+		void setColorMod(std::optional<Color> color) override;
+		void setAlphaMod(std::optional<float> alpha) override;
 
 	private:
 		struct Impl;
@@ -87,10 +87,10 @@ namespace meow {
 		~SdlGlass();
 		void* getRawData() override;
 		Vector2i getSize() override;
-		void draw(Rect src, Rect dst) override;
-		void setBlendMode(Renderable::BlendMode blend) override;
-		void setColorMod(Color color) override;
-		void setAlphaMod(float alpha) override;
+		void draw(std::optional<Rect> src, std::optional<Rect> dst) override;
+		void setBlendMode(std::optional<Renderable::BlendMode> blend) override;
+		void setColorMod(std::optional<Color> color) override;
+		void setAlphaMod(std::optional<float> alpha) override;
 
 	private:
 		struct Impl;

@@ -14,13 +14,13 @@ namespace meow {
 
 		// ACCESSORS
 		void onUpdate();
-		float getSeconds() const;
-		float getMilliseconds() const;
+		double getSeconds() const;
+		double getMilliseconds() const;
 
 	private:
-		float m_Timestep;
-		float m_CurrentTime;
-		float m_LastFrameTime;
+		double m_Timestep;
+		double m_CurrentTime;
+		double m_LastFrameTime;
 	};
 
 }

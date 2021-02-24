@@ -6,8 +6,6 @@
 
 namespace meow {
 
-
-
 	class Texture;
 
 	struct Rect
@@ -41,5 +39,6 @@ namespace meow {
 		std::optional<float> alphaMod;
 		std::optional<BlendMode> blendMode;
 		std::optional<Color> colorMod;
+		void draw(std::optional<Rect> dst);
 	};
 }

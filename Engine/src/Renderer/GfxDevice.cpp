@@ -74,4 +74,17 @@ namespace meow {
 		}
 	}
 
+
+    void SdlGfxDevice::setRenderTarget(Canvas* canvas)
+    {
+		if (canvas == nullptr)
+		{
+			SDL_SetRenderTarget(getSdlRenderer(), nullptr);
+		}
+		else
+		{
+			SDL_SetRenderTarget(getSdlRenderer(), static_cast<SDL_Texture*>(canvas->getRawData()));
+		}
+    }
+
 }

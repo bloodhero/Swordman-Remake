@@ -54,7 +54,7 @@ namespace meow {
 	}
 
 
-	struct SdlsurfaceNuklear::Impl
+	struct SdlSurfaceNuklear::Impl
 	{
 		SDL_Surface* surface;
 		struct sdlsurface_context* context;
@@ -69,30 +69,30 @@ namespace meow {
 		void* getContext();
 	};
 
-	void SdlsurfaceNuklear::Impl::begin()
+	void SdlSurfaceNuklear::Impl::begin()
 	{
 		auto size = Manager::getManager()->getGfxDevice()->getLogicalSize();
 		surface = SDL_CreateRGBSurfaceWithFormat(0, size.x, size.y, 32, SDL_PIXELFORMAT_ARGB8888);
 		context = nk_sdlsurface_init(surface, 13.0f);
 	}
 
-	void SdlsurfaceNuklear::Impl::end()
+	void SdlSurfaceNuklear::Impl::end()
 	{
 		nk_sdlsurface_shutdown(context);
 		SDL_FreeSurface(surface);
 	}
 
-	void SdlsurfaceNuklear::Impl::eventBegin()
+	void SdlSurfaceNuklear::Impl::eventBegin()
 	{
 		nk_input_begin(&(context->ctx));
 	}
 
-	void SdlsurfaceNuklear::Impl::eventEnd()
+	void SdlSurfaceNuklear::Impl::eventEnd()
 	{
 		nk_input_end(&(context->ctx));
 	}
 
-	void SdlsurfaceNuklear::Impl::render()
+	void SdlSurfaceNuklear::Impl::render()
 	{
 
 		nk_sdlsurface_render(context, clear, 1);
@@ -101,7 +101,7 @@ namespace meow {
 		SDL_DestroyTexture(tex);
 	}
 
-	void SdlsurfaceNuklear::Impl::onEvent(SDL_Event& event)
+	void SdlSurfaceNuklear::Impl::onEvent(SDL_Event& event)
 	{
 		switch (event.type)
 		{
@@ -131,54 +131,54 @@ namespace meow {
 		}
 	}
 
-	void* SdlsurfaceNuklear::Impl::getContext()
+	void* SdlSurfaceNuklear::Impl::getContext()
 	{
 		return &context->ctx;
 	}
 
-	SdlsurfaceNuklear::SdlsurfaceNuklear() :
+	SdlSurfaceNuklear::SdlSurfaceNuklear() :
 		m_Pimpl(std::make_unique<Impl>())
 	{
 
 	}
 
-	void SdlsurfaceNuklear::begin()
+	void SdlSurfaceNuklear::begin()
 	{
 		m_Pimpl->begin();
 	}
 
 
-	void SdlsurfaceNuklear::end()
+	void SdlSurfaceNuklear::end()
 	{
 		m_Pimpl->end();
 	}
 
 
-	void SdlsurfaceNuklear::eventBegin()
+	void SdlSurfaceNuklear::eventBegin()
 	{
 		m_Pimpl->eventBegin();
 	}
 
 
-	void SdlsurfaceNuklear::eventEnd()
+	void SdlSurfaceNuklear::eventEnd()
 	{
 		m_Pimpl->eventEnd();
 	}
 
 
-	void SdlsurfaceNuklear::render()
+	void SdlSurfaceNuklear::render()
 	{
 		m_Pimpl->render();
 	}
 
 
-	void* SdlsurfaceNuklear::getContext()
+	void* SdlSurfaceNuklear::getContext()
 	{
 		return m_Pimpl->getContext();
 	}
 
 
-	void SdlsurfaceNuklear::onEvent(void* e)
+	void SdlSurfaceNuklear::onEvent(void* e)
 	{
 		auto event = static_cast<SDL_Event*>(e);
 		m_Pimpl->onEvent(*event);

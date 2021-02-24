@@ -20,7 +20,7 @@ namespace meow {
 		std::string windowTitle = "Swordman";
 		std::string windowIcon = "";
 		std::string resourceDir = "";
-		Vector2i logicalSize = { 400, 240};
+		Vector2i logicalSize = { 800, 480 };
 		Vector2i resolution = { 800, 480 };
 		bool isFullScreen = false;
 		bool isResizable = true;

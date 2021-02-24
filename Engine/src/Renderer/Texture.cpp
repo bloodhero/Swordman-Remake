@@ -13,17 +13,20 @@ namespace meow {
 	{
 		switch (mode)
 		{
-		case meow::Renderable::BlendMode::NONE:
-			return SDL_BLENDMODE_NONE;
-			break;
 		case meow::Renderable::BlendMode::BLEND:
 			return SDL_BLENDMODE_BLEND;
 			break;
+
 		case meow::Renderable::BlendMode::ADD:
 			return SDL_BLENDMODE_ADD;
 			break;
+
 		case meow::Renderable::BlendMode::MOD:
 			return SDL_BLENDMODE_MOD;
+			break;
+
+		default:
+			return SDL_BLENDMODE_NONE;
 			break;
 		}
 	}
@@ -45,27 +48,73 @@ namespace meow {
 	}
 
 
-	static void draw(SDL_Texture* tex, Rect src, Rect dst)
+	static void draw(SDL_Texture* tex, std::optional<Rect> src, std::optional<Rect> dst)
 	{
-		SDL_RenderCopy(getSdlRenderer(), tex, &rect2SDL_Rect(src), &rect2SDL_Rect(dst));
+		SDL_Rect src_rect;
+		SDL_Rect dst_rect;
+		SDL_Rect* src_rect_p;
+		SDL_Rect* dst_rect_p;
+
+		if (src.has_value())
+		{
+			src_rect = rect2SDL_Rect(src.value());
+			src_rect_p = &src_rect;
+		}
+		else
+		{
+			src_rect_p = nullptr;
+		}
+
+		if (dst.has_value())
+		{
+			dst_rect = rect2SDL_Rect(dst.value());
+			dst_rect_p = &dst_rect;
+		}
+		else
+		{
+			dst_rect_p = nullptr;
+		}
+
+		SDL_RenderCopy(getSdlRenderer(), tex, src_rect_p, dst_rect_p);
 	}
 
 
-	static void setBlendMode(SDL_Texture* tex, Renderable::BlendMode blend)
+	static void setBlendMode(SDL_Texture* tex, std::optional<Renderable::BlendMode> blend)
 	{
-		SDL_SetTextureBlendMode(tex, convertBlendMode(blend));
+		if (blend.has_value())
+		{
+			SDL_SetTextureBlendMode(tex, convertBlendMode(blend.value()));
+		}
+		else
+		{
+			SDL_SetTextureBlendMode(tex, SDL_BLENDMODE_BLEND);
+		}
 	}
 
 
-	static void setColorMod(SDL_Texture* tex, Color color)
+	static void setColorMod(SDL_Texture* tex, std::optional<Color> color)
 	{
-		SDL_SetTextureColorMod(tex, color.r, color.g, color.b);
+		if (color.has_value())
+		{
+			SDL_SetTextureColorMod(tex, color.value().r, color.value().g, color.value().b);
+		}
+		else
+		{
+			SDL_SetTextureColorMod(tex, 255, 255, 255);
+		}
 	}
 
 
-	static void setAlphaMod(SDL_Texture* tex, float alpha)
+	static void setAlphaMod(SDL_Texture* tex, std::optional<float> alpha)
 	{
-		SDL_SetTextureAlphaMod(tex, static_cast<Uint8>(alpha * 255));
+		if (alpha.has_value())
+		{
+			SDL_SetTextureAlphaMod(tex, static_cast<Uint8>(alpha.value() * 255));
+		}
+		else
+		{
+			SDL_SetTextureAlphaMod(tex, 255);
+		}
 	}
 
 
@@ -76,10 +125,10 @@ namespace meow {
 		SDL_Texture* texture = nullptr;
 		Vector2i size;
 		std::string filename;
-		void draw(Rect src, Rect dst) { meow::draw(texture, src, dst); }
-		void setBlendMode(Renderable::BlendMode blend) { meow::setBlendMode(texture, blend); }
-		void setColorMod(Color color) { meow::setColorMod(texture, color); }
-		void setAlphaMod(float alpha) { meow::setAlphaMod(texture, alpha); }
+		void draw(std::optional<Rect> src, std::optional<Rect> dst) { meow::draw(texture, src, dst); }
+		void setBlendMode(std::optional<Renderable::BlendMode> blend) { meow::setBlendMode(texture, blend); }
+		void setColorMod(std::optional<Color> color) { meow::setColorMod(texture, color); }
+		void setAlphaMod(std::optional<float> alpha) { meow::setAlphaMod(texture, alpha); }
 	};
 
 
@@ -132,25 +181,25 @@ namespace meow {
 	}
 
 
-	void SdlImage::draw(Rect src, Rect dst)
+	void SdlImage::draw(std::optional<Rect> src, std::optional<Rect> dst)
 	{
 		m_Pimpl->draw(src, dst);
 	}
 
 
-	void SdlImage::setBlendMode(Renderable::BlendMode blend)
+	void SdlImage::setBlendMode(std::optional<Renderable::BlendMode> blend)
 	{
 		m_Pimpl->setBlendMode(blend);
 	}
 
 
-	void SdlImage::setColorMod(Color color)
+	void SdlImage::setColorMod(std::optional<Color> color)
 	{
 		m_Pimpl->setColorMod(color);
 	}
 
 
-	void SdlImage::setAlphaMod(float alpha)
+	void SdlImage::setAlphaMod(std::optional<float> alpha)
 	{
 		m_Pimpl->setAlphaMod(alpha);
 	}
@@ -163,10 +212,10 @@ namespace meow {
 		SDL_Texture* texture = nullptr;
 		Vector2i size;
 		void pushLayer(Renderable ra, Vector2i pos);
-		void draw(Rect src, Rect dst) { meow::draw(texture, src, dst); }
-		void setBlendMode(Renderable::BlendMode blend) { meow::setBlendMode(texture, blend); }
-		void setColorMod(Color color) { meow::setColorMod(texture, color); }
-		void setAlphaMod(float alpha) { meow::setAlphaMod(texture, alpha); }
+		void draw(std::optional<Rect> src, std::optional<Rect> dst) { meow::draw(texture, src, dst); }
+		void setBlendMode(std::optional<Renderable::BlendMode> blend) { meow::setBlendMode(texture, blend); }
+		void setColorMod(std::optional<Color> color) { meow::setColorMod(texture, color); }
+		void setAlphaMod(std::optional<float> alpha) { meow::setAlphaMod(texture, alpha); }
 	};
 
 
@@ -180,32 +229,21 @@ namespace meow {
 	{
 		auto temp = SDL_GetRenderTarget(getSdlRenderer());
 		SDL_SetRenderTarget(getSdlRenderer(), texture);
-		SDL_Texture* sdl_tex = static_cast<SDL_Texture*>(ra.texture->getRawData());
 
-		if (ra.alphaMod.has_value())
-			ra.texture->setAlphaMod(ra.alphaMod.value());
-		if (ra.colorMod.has_value())
-			ra.texture->setColorMod(ra.colorMod.value());
-		if (ra.blendMode.has_value())
-			ra.texture->setBlendMode(ra.blendMode.value());
-
-		Rect src_rect, dst_rect;
 		Vector2i size = ra.texture->getSize();
+		Rect dst_rect;
+
 		if (ra.slice.has_value())
-			src_rect = ra.slice.value();
+		{
+			dst_rect = { pos.x, pos.y, ra.slice.value().w, ra.slice.value().h };
+		}
 		else
-			src_rect = { 0, 0, size.x, size.y };
+		{
+			dst_rect = { pos.x, pos.y, size.x, size.y };
+		}
 
-		dst_rect = { pos.x, pos.y, src_rect.w, src_rect.h };
-		ra.texture->draw(src_rect, dst_rect);
-
+		ra.draw(dst_rect);
 		Manager::getManager()->getGfxDevice()->updateScreen();
-
-		// reset state
-		ra.texture->setAlphaMod(1.0f);
-		ra.texture->setBlendMode(Renderable::BlendMode::BLEND);
-		ra.texture->setColorMod({ 255,255,255,255 });
-
 		SDL_SetRenderTarget(getSdlRenderer(), temp);
 	}
 
@@ -241,25 +279,25 @@ namespace meow {
 	}
 
 
-	void SdlCanvas::draw(Rect src, Rect dst)
+	void SdlCanvas::draw(std::optional<Rect> src, std::optional<Rect> dst)
 	{
 		m_Pimpl->draw(src, dst);
 	}
 
 
-	void SdlCanvas::setBlendMode(Renderable::BlendMode blend)
+	void SdlCanvas::setBlendMode(std::optional<Renderable::BlendMode> blend)
 	{
 		m_Pimpl->setBlendMode(blend);
 	}
 
 
-	void SdlCanvas::setColorMod(Color color)
+	void SdlCanvas::setColorMod(std::optional<Color> color)
 	{
 		m_Pimpl->setColorMod(color);
 	}
 
 
-	void SdlCanvas::setAlphaMod(float alpha)
+	void SdlCanvas::setAlphaMod(std::optional<float> alpha)
 	{
 		m_Pimpl->setAlphaMod(alpha);
 	}
@@ -271,10 +309,10 @@ namespace meow {
 		~Impl();
 		SDL_Texture* texture;
 		Vector2i size;
-		void draw(Rect src, Rect dst) { meow::draw(texture, src, dst); }
-		void setBlendMode(Renderable::BlendMode blend) { meow::setBlendMode(texture, blend); }
-		void setColorMod(Color color) { meow::setColorMod(texture, color); }
-		void setAlphaMod(float alpha) { meow::setAlphaMod(texture, alpha); }
+		void draw(std::optional<Rect> src, std::optional<Rect> dst) { meow::draw(texture, src, dst); }
+		void setBlendMode(std::optional<Renderable::BlendMode> blend) { meow::setBlendMode(texture, blend); }
+		void setColorMod(std::optional<Color> color) { meow::setColorMod(texture, color); }
+		void setAlphaMod(std::optional<float> alpha) { meow::setAlphaMod(texture, alpha); }
 	};
 
 
@@ -335,25 +373,25 @@ namespace meow {
 	}
 
 
-	void SdlGlass::draw(Rect src, Rect dst)
+	void SdlGlass::draw(std::optional<Rect> src, std::optional<Rect> dst)
 	{
 		m_Pimpl->draw(src, dst);
 	}
 
 
-	void SdlGlass::setBlendMode(Renderable::BlendMode blend)
+	void SdlGlass::setBlendMode(std::optional<Renderable::BlendMode> blend)
 	{
 		m_Pimpl->setBlendMode(blend);
 	}
 
 
-	void SdlGlass::setColorMod(Color color)
+	void SdlGlass::setColorMod(std::optional<Color> color)
 	{
 		m_Pimpl->setColorMod(color);
 	}
 
 
-	void SdlGlass::setAlphaMod(float alpha)
+	void SdlGlass::setAlphaMod(std::optional<float> alpha)
 	{
 		m_Pimpl->setAlphaMod(alpha);
 	}

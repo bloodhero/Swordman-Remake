@@ -16,6 +16,8 @@ namespace meow {
 		// ACCESSORS
 
 		// MANIPULATORS
+		virtual void onCreate() = 0;
+		virtual void onDestroy() = 0;
 		virtual void onPause() = 0;
 		virtual void onResume() = 0;
 		virtual void onNuklear() = 0;

@@ -21,13 +21,13 @@ namespace meow {
 	}
 
 
-	float Timestep::getSeconds() const
+	double Timestep::getSeconds() const
 	{
 		return m_Timestep / 1000.0f;
 	}
 
 
-	float Timestep::getMilliseconds() const
+	double Timestep::getMilliseconds() const
 	{
 		return m_Timestep;
 	}
