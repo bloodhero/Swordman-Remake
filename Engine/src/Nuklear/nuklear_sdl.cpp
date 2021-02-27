@@ -8,7 +8,7 @@
 #define NK_INCLUDE_DEFAULT_FONT
 #define NK_INCLUDE_SOFTWARE_FONT
 #define NK_BUTTON_TRIGGER_ON_RELEASE
-#define NK_ZERO_COMMAND_MEMORY
+
 #include <nuklear.h>
 #define NK_SDLSURFACE_IMPLEMENTATION
 #include "Nuklear/nuklear_sdl.inl"

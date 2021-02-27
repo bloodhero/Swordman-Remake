@@ -1,4 +1,4 @@
-project "Engine"
+project "SFML-Graphics"
 	kind "StaticLib"
 	language "C++"
 	cppdialect "C++17"
@@ -7,57 +7,41 @@ project "Engine"
 	targetdir ("%{wks.location}/build/" .. outputdir .. "/%{prj.name}")
 	objdir ("%{wks.location}/build/" .. outputdir .. "/%{prj.name}/objdir")
 
-	pchheader "pch.h"
-	pchsource "src/pch.cpp"
-
 	files
 	{
-		"src/**.h",
-		"src/**.cpp"
+		"**.hpp",
+		"**.cpp"
 	}
 
 	-- 宏定义
 	defines
 	{
-		"ENGINE"
+		"SFML_STATIC"
 	}
 
 	-- 附加包含目录
 	includedirs
 	{
+		"include",
 		"src",
-		"%{IncludeDir.cute_headers}",
-		"%{IncludeDir.entt}",
-		"%{IncludeDir.ffmpeg}",
-		"%{IncludeDir.json}",
-		"%{IncludeDir.Nuklear}",
-		"%{IncludeDir.openal}",
+		"%{IncludeDir.freetype}",
+		"%{IncludeDir.glad}",
 		"%{IncludeDir.SDL2}",
-		"%{IncludeDir.sfml_graphics}",
-		"%{IncludeDir.spdlog}",
 		"%{IncludeDir.stb_image}"
 	}
 
 	-- 附加库目录
 	libdirs
 	{
+		"%{LibDir.freetype}",
 		"%{LibDir.SDL2}",
-		"%{LibDir.ffmpeg}",
-		"%{LibDir.openal}"
+		"Glad"
 	}
 
 	-- 链接的库
 	links
 	{
-		"SDL2.lib",
-		"SDL2main.lib",
-		"avcodec.lib",
-		"avformat.lib",
-		"avutil.lib",
-		"swscale.lib",
-		"swresample.lib",
-		"OpenAL32.lib",
-		"SFML-Graphics"
+
 	}
 
 	filter "system:windows"
@@ -65,6 +49,7 @@ project "Engine"
 
 		defines
 		{
+
 		}
 
 	filter "configurations:Debug"
