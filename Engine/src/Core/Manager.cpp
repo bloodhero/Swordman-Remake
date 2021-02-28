@@ -4,7 +4,6 @@
 #include "Core/Log.h"
 #include "Core/Window.h"
 #include "Nuklear/Nuklear.h"
-#include "Renderer/GfxDevice.h"
 #include "Application.h"
 #include "Core/Layer.h"
 
@@ -13,11 +12,10 @@ namespace meow {
 	{
 		Audio* audio = nullptr;
 		Window* window = nullptr;
-		GfxDevice* gfxDevice = nullptr;
 		Log* coreLog = nullptr;
 		Log* clientLog = nullptr;
 		Nuklear* nuklear = nullptr;
-		PostEffect* postEffect = nullptr;
+		Renderer* renderer = nullptr;
 		~Impl();
 	};
 
@@ -25,11 +23,9 @@ namespace meow {
 	{
 		delete audio;
 		delete window;
-		delete gfxDevice;
 		delete coreLog;
 		delete clientLog;
 		delete nuklear;
-		delete postEffect;
 	}
 
 
@@ -49,13 +45,6 @@ namespace meow {
 		return m_Pimpl->window;
 	}
 
-
-	meow::GfxDevice* Manager::getGfxDevice()
-	{
-		return m_Pimpl->gfxDevice;
-	}
-
-
 	meow::Log* Manager::getCoreLog()
 	{
 		return m_Pimpl->coreLog;
@@ -74,9 +63,9 @@ namespace meow {
 	}
 
 
-	meow::PostEffect* Manager::getPostEffect()
+	meow::Renderer* Manager::getRenderer()
 	{
-		return m_Pimpl->postEffect;
+		return m_Pimpl->renderer;
 	}
 
 	void Manager::setAudio(Audio* a)
@@ -91,14 +80,6 @@ namespace meow {
 		if (m_Pimpl->window) delete m_Pimpl->window;
 		m_Pimpl->window = w;
 	}
-
-
-	void Manager::setGfxDevice(GfxDevice* g)
-	{
-		if (m_Pimpl->gfxDevice) delete m_Pimpl->gfxDevice;
-		m_Pimpl->gfxDevice = g;
-	}
-
 
 	void Manager::setCoreLog(Log* l)
 	{
@@ -121,12 +102,11 @@ namespace meow {
 	}
 
 
-	void Manager::setPostEffect(PostEffect* p)
+	void Manager::setRenderer(Renderer* r)
 	{
-		if (m_Pimpl->postEffect) delete m_Pimpl->postEffect;
-		m_Pimpl->postEffect = p;
+		if (m_Pimpl->renderer) delete m_Pimpl->renderer;
+		m_Pimpl->renderer = r;
 	}
-
 
 	void Manager::pushLayer(Layer* l)
 	{

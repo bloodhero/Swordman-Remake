@@ -5,12 +5,11 @@
 #include "Core/Manager.h"
 #include "Core/Timestep.h"
 #include "Core/Scene.h"
-#include "Renderer/GfxDevice.h"
 #include "Nuklear/Nuklear.h"
 #include "Audio/Audio.h"
 #include "Core/Window.h"
 #include "Nuklear/Nuklear.h"
-#include "Renderer/Camera.h"
+#include "Renderer/Renderer.h"
 
 namespace meow {
 
@@ -54,23 +53,18 @@ namespace meow {
 			while (accumulator >= MS_PER_UPDATE)
 			{
 				sceneStack->getCurrentScene()->onUpdate(MS_PER_UPDATE);
-				Camera::onUpdate(MS_PER_UPDATE);
 				manager->getAudio()->onUpdate(MS_PER_UPDATE);
 				accumulator -= MS_PER_UPDATE;
 
 			}
 			if (!isMinimized)
 			{
-				// äÖÈ¾
-				manager->getPostEffect()->begin();
-				manager->getGfxDevice()->clearScreen();
+				manager->getManager()->getRenderer()->clear();
 				sceneStack->getCurrentScene()->onDraw();
-				manager->getPostEffect()->end();
-
-				// UIäÖÈ¾
 				sceneStack->getCurrentScene()->onNuklear();
 				nuklear->render();
-				manager->getGfxDevice()->updateScreen();
+				manager->getManager()->getRenderer()->display();
+
 			}
 		}
 		nuklear->end();
@@ -131,18 +125,16 @@ namespace meow {
 		}
 
 		manager->setWindow(new SdlWindow());
-		manager->setGfxDevice(new SdlGfxDevice());
 
 		manager->getWindow()->setWindowTitle(app_cfg.windowTitle);
 		manager->getWindow()->setWindowIcon(app_cfg.windowIcon);
 		manager->getWindow()->setResolution(app_cfg.resolution);
-		manager->getGfxDevice()->setLogicalSize(app_cfg.logicalSize);
 		manager->getWindow()->setFullScreen(app_cfg.isFullScreen);
 		manager->getWindow()->setResizable(app_cfg.isResizable);
 
-		manager->setNuklear(new SdlSurfaceNuklear());
-		manager->setPostEffect(new PostEffect());
+		manager->setNuklear(new SdlGl3Nuklear());
 		manager->setAudio(new OpenALAudio());
+		manager->setRenderer(new Renderer());
 	}
 
 

@@ -2,11 +2,9 @@
 
 #include <memory>
 #include <string>
-#include "Math/Vector2.h"
-
+#include <SFML/System/Vector2.hpp>
+using namespace sf;
 namespace meow {
-
-	class Texture;
 
 	// Interface representing a desktop system based Window
 	class Window
@@ -29,6 +27,7 @@ namespace meow {
 		virtual void setWindowTitle(std::string_view title) = 0;
 		virtual void setWindowIcon(std::string_view icon_file) = 0;
 		virtual void setVSync(bool enabled) = 0;
+		virtual void* getRawRenderer() = 0;
 	};
 
 	class SdlWindow :public Window
@@ -47,7 +46,7 @@ namespace meow {
 		void setWindowTitle(std::string_view title) override;
 		void setWindowIcon(std::string_view icon_file) override;
 		void setVSync(bool enabled) override;
-		void* getRawRenderer();
+		void* getRawRenderer() override;
 
 	private:
 		struct Impl;

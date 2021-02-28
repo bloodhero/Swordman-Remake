@@ -28,8 +28,8 @@
 #define SF_GLAD_GL_IMPLEMENTATION
 #include <SFML/Graphics/GLExtensions.hpp>
 #include <SFML/System/Err.hpp>
-#include <SDL.h>
-#include <cassert>
+
+
 
 #if !defined(GL_MAJOR_VERSION)
     #define GL_MAJOR_VERSION 0x821B
@@ -51,13 +51,6 @@ void ensureExtensionsInit()
     if (!initialized)
     {
         initialized = true;
-
-#ifdef SFML_OPENGL_ES
-        gladLoadGLES1(reinterpret_cast<GLADloadfunc>(sf::Context::getFunction));
-#else
-        auto result = gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress);
-        assert(result, "GLAD: Failed to initialize the OpenGL context.");
-#endif
 
         // Retrieve the context version number
         int majorVersion = 0;

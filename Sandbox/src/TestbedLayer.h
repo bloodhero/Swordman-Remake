@@ -1,5 +1,5 @@
 #pragma once
-
+#include <SFML/Graphics.hpp>
 #include <Engine.h>
 
 namespace meow {
@@ -22,11 +22,6 @@ namespace meow {
 
 	private:
 
-		SdlGlass* glass;
-		SdlImage* image;
-		SdlCanvas* canvas;
-		Picture* picture;
-		Camera* cam;
-		Shared<Animation> ani;
+		sf::CircleShape shape;
 	};
 }

@@ -2,7 +2,7 @@
 #include <SDL.h>
 #include "Core/Window.h"
 #include "Core/Utils.h"
-#include "Renderer/Texture.h"
+#include <glad/glad.h>
 
 namespace meow {
 	struct SdlWindow::Impl {
@@ -13,7 +13,7 @@ namespace meow {
 		std::string windowTitle = "Swordman Engine";
 		std::string windowIcon = "";
 		SDL_Window* windowHandle = nullptr;
-		SDL_Renderer* rendererHandle = nullptr;
+		SDL_GLContext glContext;
 
 		void setResizable(bool resize);
 		void setFullScreen(bool full);
@@ -44,7 +44,8 @@ namespace meow {
 
 	void SdlWindow::Impl::setVSync(bool vsync)
 	{
-		SDL_SetHint(SDL_HINT_RENDER_VSYNC, vsync ? "1" : "0");
+		isVsync = vsync;
+		SDL_GL_SetSwapInterval(vsync ? 1 : 0);
 	}
 
 	void SdlWindow::Impl::setWindowTitle(std::string_view title)
@@ -87,19 +88,26 @@ namespace meow {
 		int result = SDL_Init(SDL_INIT_VIDEO);
 		ASSERT(!result, "SDL: Failed to initialize the SDL system. {}", SDL_GetError());
 
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);
+		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+
 		windowHandle = SDL_CreateWindow(windowTitle.c_str(),
 			SDL_WINDOWPOS_CENTERED,
 			SDL_WINDOWPOS_CENTERED,
 			resolution.x,
 			resolution.y,
-			SDL_WINDOW_SHOWN );
+			SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
 
 		ASSERT(windowHandle, "SDL: Failed to initialize the SDL window. {}", SDL_GetError());
 
-		// create renderer context
-		rendererHandle = SDL_CreateRenderer(windowHandle, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE);
+		glContext = SDL_GL_CreateContext(windowHandle);
+		SDL_GL_MakeCurrent(windowHandle, glContext);
 
-		LOGGER->trace("SDL initialized.");
+		gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress);
+
+		LOGGER->trace("SDL && OpenGL initialized.");
 
 		// ÅäÖÃ´°¿ÚÊôÐÔ
 		setVSync(isVsync);
@@ -111,7 +119,7 @@ namespace meow {
 
 	SdlWindow::Impl::~Impl()
 	{
-		SDL_DestroyRenderer(rendererHandle);
+		SDL_GL_DeleteContext(glContext);
 		SDL_DestroyWindow(windowHandle);
 		SDL_Quit();
 	}
@@ -138,7 +146,7 @@ namespace meow {
 	}
 
 
-	meow::Vector2i SdlWindow::getResolution()
+	Vector2i SdlWindow::getResolution()
 	{
 		return m_Pimpl->resolution;
 	}
@@ -170,7 +178,7 @@ namespace meow {
 
 	void* SdlWindow::getRawRenderer()
 	{
-		return m_Pimpl->rendererHandle;
+		return m_Pimpl->windowHandle;
 	}
 
 	void SdlWindow::setWindowTitle(std::string_view title)

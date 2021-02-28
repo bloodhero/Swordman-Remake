@@ -33,7 +33,7 @@
 #define SFML_VERSION_MINOR 5
 #define SFML_VERSION_PATCH 1
 
-
+#define SFML_STATIC
 ////////////////////////////////////////////////////////////
 // Identify the operating system
 // see https://sourceforge.net/p/predef/wiki/Home/

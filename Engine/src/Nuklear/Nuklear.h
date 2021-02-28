@@ -15,11 +15,24 @@ namespace meow {
 		virtual void onEvent(void* e) = 0;
 	};
 
-	class SdlSurfaceNuklear :public Nuklear
+	class NullNuklear :public Nuklear
 	{
 	public:
-		SdlSurfaceNuklear();
-		~SdlSurfaceNuklear() = default;
+		~NullNuklear() = default;
+		void begin() {}
+		void end() {}
+		void eventBegin() {}
+		void eventEnd() {}
+		void render() {}
+		void* getContext() { return nullptr; }
+		void onEvent(void* e) {}
+	};
+
+	class SdlGl3Nuklear :public Nuklear
+	{
+	public:
+		SdlGl3Nuklear();
+		~SdlGl3Nuklear() = default;
 		void begin() override;
 		void end() override;
 		void eventBegin() override;

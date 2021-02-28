@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "Audio/Audio.h"
-#include "Math/Vector2.h"
+#include <SFML/System/Vector2.hpp>
 #include <AL/al.h>
 #include <AL/alc.h>
 #include <AL/alext.h>
@@ -10,6 +10,7 @@ extern "C" {
 #include <libavformat/avformat.h>
 #include <libswresample/swresample.h>
 }
+using namespace sf;
 
 namespace meow {
 

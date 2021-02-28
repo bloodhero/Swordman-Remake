@@ -19,7 +19,8 @@ project "Engine"
 	-- 宏定义
 	defines
 	{
-		"ENGINE"
+		"ENGINE",
+		"SFML_STATIC"
 	}
 
 	-- 附加包含目录
@@ -35,7 +36,8 @@ project "Engine"
 		"%{IncludeDir.SDL2}",
 		"%{IncludeDir.sfml_graphics}",
 		"%{IncludeDir.spdlog}",
-		"%{IncludeDir.stb_image}"
+		"%{IncludeDir.stb_image}",
+		"%{IncludeDir.glad}"
 	}
 
 	-- 附加库目录

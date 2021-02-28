@@ -6,182 +6,139 @@
 #define NK_INCLUDE_STANDARD_IO
 #define NK_INCLUDE_STANDARD_VARARGS
 #define NK_INCLUDE_DEFAULT_ALLOCATOR
+#define NK_INCLUDE_VERTEX_BUFFER_OUTPUT
 #define NK_INCLUDE_FONT_BAKING
 #define NK_INCLUDE_DEFAULT_FONT
-#define NK_INCLUDE_SOFTWARE_FONT
-#define NK_BUTTON_TRIGGER_ON_RELEASE
+
+#define NK_INCLUDE_FIXED_TYPES
+#define NK_INCLUDE_STANDARD_VARARGS
+#define NK_INCLUDE_DEFAULT_ALLOCATOR
+#define NK_INCLUDE_VERTEX_BUFFER_OUTPUT
+#define NK_INCLUDE_FONT_BAKING
+#define NK_INCLUDE_DEFAULT_FONT
+#define NK_KEYSTATE_BASED_INPUT
 
 #include <nuklear.h>
-#include "Nuklear/nuklear_sdl.inl"
+#include "Nuklear/nuklear_sdl_gl3.inl"
 #include "Nuklear/Nuklear.h"
+#define MAX_VERTEX_MEMORY 512 * 1024
+#define MAX_ELEMENT_MEMORY 128 * 1024
 
 namespace meow {
 
-	static SDL_Renderer* getSdlRenderer()
+	static SDL_Window* getSdlRenderer()
 	{
-		static SDL_Renderer* sdl_renderer = nullptr;
+		static SDL_Window* sdl_renderer = nullptr;
 		if (sdl_renderer) return sdl_renderer;
 		SdlWindow* sdl_window = static_cast<SdlWindow*>(Manager::getManager()->getWindow());
-		sdl_renderer = static_cast<SDL_Renderer*>(sdl_window->getRawRenderer());
+		sdl_renderer = static_cast<SDL_Window*>(sdl_window->getRawRenderer());
 		return sdl_renderer;
 	}
 
-	static nk_keys translate_sdl_key(struct SDL_Keysym const* k)
+	struct SdlGl3Nuklear::Impl
 	{
-		/*keyboard handling left as an exercise for the reader */
-
-		return NK_KEY_NONE;
-	}
-
-
-	static nk_buttons sdl_button_to_nk(int button)
-	{
-		switch (button)
-		{
-		case SDL_BUTTON_LEFT:
-			return NK_BUTTON_LEFT;
-			break;
-		case SDL_BUTTON_MIDDLE:
-			return NK_BUTTON_MIDDLE;
-			break;
-		case SDL_BUTTON_RIGHT:
-			return NK_BUTTON_RIGHT;
-			break;
-		default:
-			//ft
-			break;
-		}
-	}
-
-
-	struct SdlSurfaceNuklear::Impl
-	{
-		SDL_Surface* surface;
-		struct sdlsurface_context* context;
-		struct nk_color clear = { 0,0,0,0 };
-		struct nk_vec2 vec;
+		struct nk_context* context;
 		void begin();
 		void end();
 		void eventBegin();
 		void eventEnd();
 		void render();
-		void onEvent(SDL_Event& event);
+		void onEvent(SDL_Event* event);
 		void* getContext();
 	};
 
-	void SdlSurfaceNuklear::Impl::begin()
+	void SdlGl3Nuklear::Impl::begin()
 	{
-		auto size = Manager::getManager()->getGfxDevice()->getLogicalSize();
-		surface = SDL_CreateRGBSurfaceWithFormat(0, size.x, size.y, 32, SDL_PIXELFORMAT_ARGB8888);
-		context = nk_sdlsurface_init(surface, 13.0f);
+		context = nk_sdl_init(getSdlRenderer());
+		{struct nk_font_atlas* atlas;
+		nk_sdl_font_stash_begin(&atlas);
+		/*struct nk_font *droid = nk_font_atlas_add_from_file(atlas, "../../../extra_font/DroidSans.ttf", 14, 0);*/
+		/*struct nk_font *roboto = nk_font_atlas_add_from_file(atlas, "../../../extra_font/Roboto-Regular.ttf", 16, 0);*/
+		/*struct nk_font *future = nk_font_atlas_add_from_file(atlas, "../../../extra_font/kenvector_future_thin.ttf", 13, 0);*/
+		/*struct nk_font *clean = nk_font_atlas_add_from_file(atlas, "../../../extra_font/ProggyClean.ttf", 12, 0);*/
+		/*struct nk_font *tiny = nk_font_atlas_add_from_file(atlas, "../../../extra_font/ProggyTiny.ttf", 10, 0);*/
+		/*struct nk_font *cousine = nk_font_atlas_add_from_file(atlas, "../../../extra_font/Cousine-Regular.ttf", 13, 0);*/
+		nk_sdl_font_stash_end();
+		/*nk_style_load_all_cursors(ctx, atlas->cursors);*/
+		/*nk_style_set_font(ctx, &roboto->handle);*/}
 	}
 
-	void SdlSurfaceNuklear::Impl::end()
+	void SdlGl3Nuklear::Impl::end()
 	{
-		nk_sdlsurface_shutdown(context);
-		SDL_FreeSurface(surface);
+		nk_sdl_shutdown();
 	}
 
-	void SdlSurfaceNuklear::Impl::eventBegin()
+	void SdlGl3Nuklear::Impl::eventBegin()
 	{
-		nk_input_begin(&(context->ctx));
+		nk_input_begin(context);
 	}
 
-	void SdlSurfaceNuklear::Impl::eventEnd()
+	void SdlGl3Nuklear::Impl::eventEnd()
 	{
-		nk_input_end(&(context->ctx));
+		nk_input_end(context);
 	}
 
-	void SdlSurfaceNuklear::Impl::render()
+	void SdlGl3Nuklear::Impl::render()
 	{
-
-		nk_sdlsurface_render(context, clear, 1);
-		SDL_Texture* tex = SDL_CreateTextureFromSurface(getSdlRenderer(), surface);
-		SDL_RenderCopy(getSdlRenderer(), tex, NULL, NULL);
-		SDL_DestroyTexture(tex);
+		nk_sdl_render(NK_ANTI_ALIASING_ON, MAX_VERTEX_MEMORY, MAX_ELEMENT_MEMORY);
 	}
 
-	void SdlSurfaceNuklear::Impl::onEvent(SDL_Event& event)
+	void SdlGl3Nuklear::Impl::onEvent(SDL_Event* event)
 	{
-		switch (event.type)
-		{
-		case SDL_QUIT:
-			exit(0);
-			break;
-		case SDL_KEYDOWN:
-			nk_input_key(&(context->ctx), translate_sdl_key(&event.key.keysym), 1);
-			break;
-		case SDL_KEYUP:
-			nk_input_key(&(context->ctx), translate_sdl_key(&event.key.keysym), 0);
-			break;
-		case SDL_MOUSEMOTION:
-			nk_input_motion(&(context->ctx), event.motion.x, event.motion.y);
-			break;
-		case SDL_MOUSEBUTTONDOWN:
-			nk_input_button(&(context->ctx), sdl_button_to_nk(event.button.button), event.button.x, event.button.y, 1);
-			break;
-		case SDL_MOUSEBUTTONUP:
-			nk_input_button(&(context->ctx), sdl_button_to_nk(event.button.button), event.button.x, event.button.y, 0);
-			break;
-		case SDL_MOUSEWHEEL:
-			vec.x = event.wheel.x;
-			vec.y = event.wheel.y;
-			nk_input_scroll(&(context->ctx), vec);
-			break;
-		}
+		nk_sdl_handle_event(event);
 	}
 
-	void* SdlSurfaceNuklear::Impl::getContext()
+	void* SdlGl3Nuklear::Impl::getContext()
 	{
-		return &context->ctx;
+		return context;
 	}
 
-	SdlSurfaceNuklear::SdlSurfaceNuklear() :
+	SdlGl3Nuklear::SdlGl3Nuklear() :
 		m_Pimpl(std::make_unique<Impl>())
 	{
 
 	}
 
-	void SdlSurfaceNuklear::begin()
+	void SdlGl3Nuklear::begin()
 	{
 		m_Pimpl->begin();
 	}
 
 
-	void SdlSurfaceNuklear::end()
+	void SdlGl3Nuklear::end()
 	{
 		m_Pimpl->end();
 	}
 
 
-	void SdlSurfaceNuklear::eventBegin()
+	void SdlGl3Nuklear::eventBegin()
 	{
 		m_Pimpl->eventBegin();
 	}
 
 
-	void SdlSurfaceNuklear::eventEnd()
+	void SdlGl3Nuklear::eventEnd()
 	{
 		m_Pimpl->eventEnd();
 	}
 
 
-	void SdlSurfaceNuklear::render()
+	void SdlGl3Nuklear::render()
 	{
 		m_Pimpl->render();
 	}
 
 
-	void* SdlSurfaceNuklear::getContext()
+	void* SdlGl3Nuklear::getContext()
 	{
 		return m_Pimpl->getContext();
 	}
 
 
-	void SdlSurfaceNuklear::onEvent(void* e)
+	void SdlGl3Nuklear::onEvent(void* e)
 	{
 		auto event = static_cast<SDL_Event*>(e);
-		m_Pimpl->onEvent(*event);
+		m_Pimpl->onEvent(event);
 	}
 
 }

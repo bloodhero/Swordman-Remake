@@ -35,13 +35,13 @@ project "SFML-Graphics"
 	{
 		"%{LibDir.freetype}",
 		"%{LibDir.SDL2}",
-		"Glad"
+
 	}
 
 	-- Á´½ÓµÄ¿â
 	links
 	{
-
+		"Glad"
 	}
 
 	filter "system:windows"

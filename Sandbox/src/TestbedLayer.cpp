@@ -4,11 +4,9 @@ namespace meow {
 
 
 	TestbedLayer::TestbedLayer() :
-		cam(new Camera()),
-		picture(nullptr)
+		shape(100.f)
 	{
-		ani = CreateShared<Animation>("data/man_eff/Animation.json", cam);
-		LOGGER->info("dirname is {}", dirName("data/Animation.json"));
+		//shape.setFillColor(sf::Color::Green);
 	}
 
 
@@ -30,13 +28,13 @@ namespace meow {
 
 	void TestbedLayer::onDraw()
 	{
-		ani->onDraw();
+		Manager::getManager()->getRenderer()->draw(shape);
 	}
 
 
 	void TestbedLayer::onUpdate(float time)
 	{
-		ani->onUpdate(time);
+
 	}
 
 }

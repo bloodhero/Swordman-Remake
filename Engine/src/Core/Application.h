@@ -9,8 +9,10 @@
 
 
 #include <string>
-#include "Math/Vector2.h"
+#include <SFML/System/Vector2.hpp>
 #include "Core/Utils.h"
+
+using namespace sf;
 
 namespace meow {
 	class Scene;
@@ -20,8 +22,8 @@ namespace meow {
 		std::string windowTitle = "Swordman";
 		std::string windowIcon = "";
 		std::string resourceDir = "";
-		Vector2i logicalSize = { 800, 480 };
-		Vector2i resolution = { 800, 480 };
+		Vector2i logicalSize = { 800, 600 };
+		Vector2i resolution = { 800, 600 };
 		bool isFullScreen = false;
 		bool isResizable = true;
 		bool isEnableLog = true;

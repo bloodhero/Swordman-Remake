@@ -7,6 +7,11 @@ project "Sandbox"
 	targetdir ("%{wks.location}/build/" .. outputdir .. "/%{prj.name}")
 	objdir ("%{wks.location}/build/" .. outputdir .. "/%{prj.name}/objdir")
 
+	defines
+	{
+		"SFML_STATIC"
+	}
+
 	files
 	{
 		"src/**.h",
@@ -17,12 +22,15 @@ project "Sandbox"
 	{
 		"%{wks.location}/Engine/src",
 		"%{IncludeDir.spdlog}",
-		"%{IncludeDir.Nuklear}"
+		"%{IncludeDir.Nuklear}",
+		"%{IncludeDir.sfml_graphics}"
 	}
 
 	links
 	{
-		"Engine"
+		"Engine",
+		"Glad",
+		"opengl32.lib"
 	}
 
 	filter "system:windows"
